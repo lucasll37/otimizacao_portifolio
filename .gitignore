@@ -2,3 +2,4 @@
 results
 sqlite
 env
+**/__pycache__/
