@@ -1,51 +1,49 @@
 from typing import List, Dict
 
 # Lista de tickers para os quais as análises serão feitas.
-
 tickers: List[str] = [
-    "RRRP3.SA",     # 3R Petroleum Óleo e Gás S.A
-    # "ALOS3.SA",     # Aliansce Sonae Shopping Centers S.A
-    "ALPA4.SA",     # Alpargatas S.A
     "ABEV3.SA",     # Ambev S.A
+    "ALOS3.SA",     # Aliansce Sonae Shopping Centers S.A
+    "ALPA4.SA",     # Alpargatas S.A
     "ARZZ3.SA",     # Arezzo Indústria e Comércio S.A
     "ASAI3.SA",     # Assaí Atacadista S.A
     "AZUL4.SA",     # Azul S.A
     "B3SA3.SA",     # B3 - Brasil Bolsa Balcão S.A
-    "BBSE3.SA",     # BB Seguridade Participações S.A
     "BBDC3.SA",     # Banco Bradesco S.A
     "BBDC4.SA",     # Banco Bradesco S.A
-    "BRAP4.SA",     # Bradespar S.A
     "BBAS3.SA",     # Banco do Brasil S.A
-    "BRKM5.SA",     # Braskem S.A
-    "BRFS3.SA",     # BRF S.A
-    "BPAC11.SA",    # Banco BTG Pactual S.A
-    "CRFB3.SA",     # Carrefour Brasil Grupo Carrefour Brasil
+    "BBSE3.SA",     # BB Seguridade Participações S.A
+    "BEEF3.SA",     # Minerva S.A
     "BHIA3.SA",     # Bahema S.A
+    "BPAC11.SA",    # Banco BTG Pactual S.A
+    "BRAP4.SA",     # Bradespar S.A
+    "BRFS3.SA",     # BRF S.A
+    "BRKM5.SA",     # Braskem S.A
     "CCRO3.SA",     # CCR S.A
-    "CMIG4.SA",     # Cemig Companhia Energética de Minas Gerais
     "CIEL3.SA",     # Cielo S.A
-    "COGN3.SA",     # Cogna Educação S.A
-    "CPLE6.SA",     # Copel Companhia Paranaense de Energia
-    "CSAN3.SA",     # Cosan S.A
-    "CPFE3.SA",     # CPFL Energia S.A
+    "CMIG4.SA",     # Cemig Companhia Energética de Minas Gerais
     "CMIN3.SA",     # CSN Mineração S.A
+    "COGN3.SA",     # Cogna Educação S.A
+    "CPFE3.SA",     # CPFL Energia S.A
+    "CPLE6.SA",     # Copel Companhia Paranaense de Energia
+    "CRFB3.SA",     # Carrefour Brasil Grupo Carrefour Brasil
+    "CSAN3.SA",     # Cosan S.A
+    "CSNA3.SA",     # Companhia Siderúrgica Nacional
     "CVCB3.SA",     # CVC Brasil Operadora e Agência de Viagens S.A
     "CYRE3.SA",     # Cyrela Brazil Realty S.A Empreendimentos e Participações
     "DXCO3.SA",     # Dexco S.A
+    "EGIE3.SA",     # Engie Brasil Energia S.A
     "ELET3.SA",     # Eletrobras Centrais Elétricas Brasileiras S.A
     "ELET6.SA",     # Eletrobras Centrais Elétricas Brasileiras S.A
     "EMBR3.SA",     # Embraer S.A
-    "ENGI11.SA",    # Engie Brasil Energia S.A
     "ENEV3.SA",     # Eneva S.A
-    "EGIE3.SA",     # Engie Brasil Energia S.A
+    "ENGI11.SA",    # Engie Brasil Energia S.A
     "EQTL3.SA",     # Equatorial Energia S.A
     "EZTC3.SA",     # EZTEC Empreendimentos e Participações S.A
     "FLRY3.SA",     # Fleury S.A
     "GGBR4.SA",     # Gerdau S.A
     "GOAU4.SA",     # Metalúrgica Gerdau S.A
     "GOLL4.SA",     # Gol Linhas Aéreas Inteligentes S.A
-    "NTCO3.SA",     # Natura &Co Holding S.A
-    "SOMA3.SA",     # Grupo Soma
     "HAPV3.SA",     # Hapvida Participações e Investimentos S.A
     "HYPE3.SA",     # Hypera Pharma
     "IGTI11.SA",    # IGCT
@@ -54,32 +52,32 @@ tickers: List[str] = [
     "ITUB4.SA",     # Itaú Unibanco Holding S.A
     "JBSS3.SA",     # JBS S.A
     "KLBN11.SA",    # Klabin S.A
-    "RENT3.SA",     # Localiza Rent a Car S.A
     "LREN3.SA",     # Lojas Renner S.A
     "LWSA3.SA",     # Locaweb Serviços de Internet S.A
     "MGLU3.SA",     # Magazine Luiza S.A
     "MRFG3.SA",     # Marfrig Global Foods S.A
-    "BEEF3.SA",     # Minerva S.A
     "MRVE3.SA",     # MRV Engenharia e Participações S.A
     "MULT3.SA",     # Multiplan Empreendimentos Imobiliários S.A
+    "NTCO3.SA",     # Natura &Co Holding S.A
     "PCAR3.SA",     # Grupo Pão de Açúcar
     "PETR3.SA",     # Petróleo Brasileiro S.A - Petrobras
     "PETR4.SA",     # Petróleo Brasileiro S.A - Petrobras
-    "RECV3.SA",     # Rede D'Or São Luiz S.A
-    "PRIO3.SA",     # PetroRio S.A
     "PETZ3.SA",     # Petz
+    "PRIO3.SA",     # PetroRio S.A
     "RADL3.SA",     # Raia Drogasil S.A
+    "RAIL3.SA",     # Rumo S.A
     "RAIZ4.SA",     # Raízen S.A
     "RDOR3.SA",     # Rede D'Or São Luiz S.A
-    "RAIL3.SA",     # Rumo S.A
-    "SBSP3.SA",     # Sabesp Companhia de Saneamento Básico do Estado de São Paulo
+    "RECV3.SA",     # Rede D'Or São Luiz S.A
+    "RENT3.SA",     # Localiza Rent a Car S.A
+    "RRRP3.SA",     # 3R Petroleum Óleo e Gás S.A
     "SANB11.SA",    # Banco Santander Brasil S.A
-    "SMTO3.SA",     # São Martinho S.A
-    "CSNA3.SA",     # Companhia Siderúrgica Nacional
+    "SBSP3.SA",     # Sabesp Companhia de Saneamento Básico do Estado de São Paulo
     "SLCE3.SA",     # SLC Agrícola S.A
+    "SMTO3.SA",     # São Martinho S.A
+    "SOMA3.SA",     # Grupo Soma
     "SUZB3.SA",     # Suzano S.A
     "TAEE11.SA",    # Taesa Transmissora Aliança de Energia Elétrica S.A
-    "VIVT3.SA",     # Telefônica Brasil S.A
     "TIMS3.SA",     # TIM S.A
     "TOTS3.SA",     # Totvs S.A
     "TRPL4.SA",     # Transmissão Paulista Companhia Paulista de Força e Luz
@@ -88,6 +86,7 @@ tickers: List[str] = [
     "VALE3.SA",     # Vale S.A
     "VAMO3.SA",     # Vamos Locação de Caminhões, Máquinas e Equipamentos S.A
     "VBBR3.SA",     # Vibra Energia S.A
+    "VIVT3.SA",     # Telefônica Brasil S.A
     "WEGE3.SA",     # WEG S.A
     "YDUQ3.SA"      # Yduqs Participações S.A
 ]
@@ -113,7 +112,7 @@ SEED: int = 25
 n_trials_optuna: int = 1
 
 # Número de épocas para treinamento do modelo.
-epochs: int = 10
+epochs: int = 3
 
 # Número de simulações para a simulação de Monte Carlo.
 monte_carlo_simulation: int = 250

@@ -15,6 +15,7 @@ class Period(TypedDict):
 
 def getData(ticker: str, period: Period) -> None:
     try:
+        print(f"Downloading ticker data {ticker}...")
         data: pd.DataFrame = yf.download(ticker, period['start'], period['end'])
 
         for index, _ in data.iterrows():
@@ -34,7 +35,7 @@ def getData(ticker: str, period: Period) -> None:
         data.to_csv(f'./results/data/{ticker}.csv')
 
     except Exception as e:
-        print(f"Erro ao baixar dados: {e}")
+        print(f"Erro ao baixar dados do ticker {ticker}: {e}")
 
 if __name__ == '__main__':
     

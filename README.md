@@ -17,8 +17,7 @@ A janela de tempo de *period['boundary']* a *period['end']* é utilizada para te
 ### Criação do ambiente virtual
 
 ```
-conda create --name otimizacao_portifolio python=3.11.x
-conda install pip
+conda create --name otimizacao_portifolio python=3.11
 ```
 
 ### Ativação do ambiente virtual
@@ -28,6 +27,7 @@ conda activate otimizacao_portifolio
 
 ### Instalar dependências
 ```bash
+conda install pip
 pip install -r ./requirements.txt
 ```
 
@@ -58,7 +58,7 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
   }
     ```
 ### observation_window
-- `observation_window`: Dicionário definindo a janela de observação para análise.
+- `observation_window`: Dicionário definindo a janela de observação para análise. Interprete: O modelo observa o preço de fechamento dos últimos *stepsBack* dias e, com base neles, infere o preço de fechamento dos próximos *stepsFoward* dias.
 - Exemplo:
   ```python
   observation_window: Dict[str, int] = {
@@ -117,7 +117,7 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
   ```
 
 ### maximum_participation
-- `maximum_participation`: Mínimo de participação de um ativo na carteira.
+- `maximum_participation`: Máximo de participação de um ativo na carteira.
 - Exemplo:
 ```python
 minimum_participation: float = 0.15
@@ -125,34 +125,37 @@ minimum_participation: float = 0.15
 
 ## Executar o projeto
 ```bash
-python ./src/main.py [OPTIONAL ARGUMENTS]
+python ./main.py [OPTIONAL ARGUMENTS]
 ```
 ### Comportamento
 Faz o download dos dados, treina o modelo, faz a previsão, gera simulação de Monte Carlo para a evolução dos preços e otimiza o portfólio com base no retorno esperado obtido via IA.
 
 ### Argumentos Opcionais
 - `--no-download`: Executa o projeto sem realizar o download dos dados. Espera-se que os mesmos já tem sido baixados previamente.
+
 - `--only-download`: Não executa projeto, somente realiza o download dos dados.
+
 - `--no-train`: Executa o projeto sem realizar o treinamento. Caso a otimização do portfolio seja com base no retorno esperado obtido via IA, espera-se que o modelo já tenha sido treinado previamente.
+
 - `--no-ai`: Executa a otimização do portifolio com base no retorno esperado obtido via média histórica. Implicitamente, não realiza o treinamento do modelo, não faz a previsão do retorno esperado e não faz a simulação de Monte Carlo.
 
 #### Exemplos
 - Realiza o download dos dados.
 
   ```bash
-  python ./src/main.py --only-download
+  python ./main.py --only-download
   ```
 
 - Realiza otimização de portfólio com base no retorno esperado obtido via IA, sem realizar o download dos dados e sem treinar o modelo.
 
   ```bash
-  python ./src/main.py --no-download --no-train
+  python ./main.py --no-download --no-train
   ```
 
 - Realiza otimização de portfólio com base no retorno esperado obtido via média histórica sem realizar o download dos dados.
 
   ```bash
-  python ./src/main.py --no-download --no-ai
+  python ./main.py --no-download --no-ai
   ```
 
 ## Estrutura do Projeto
@@ -232,9 +235,9 @@ otimizacao_portifolio/
 - `requirements.txt`: Lista todas as bibliotecas necessárias para executar o projeto.
 
 ## Observações
-- O diretório `./result` e suas subpastas são criadas automaticamente ao executar o projeto e podem ser movida (recortada, renomeada ou excluída) sem comprometer o correto funcionamento do projeto.
+- O diretório `./result` e suas subpastas são criadas automaticamente ao executar o projeto e podem ser movidas (recortada, renomeada ou excluída) sem comprometer o correto funcionamento do projeto.
 
-- A cada execução, caso já exista o diretório ``./results`, é feito a sobreposição dos arquivos com nome comum. Raciocine com esse comportamente para manter o resultado das otimizações de mesmo escopo agrupados.
+- A cada execução, caso já exista o diretório `./results`, é feito a sobreposição dos arquivos com nome comum. Raciocine com esse comportamente para manter o resultado das otimizações de mesmo escopo agrupados.
 
 - Caso decida alterar o espaço de buscas da otimização dos hiperparâmetros em `./src/optimizer.py`, remova manualmente o diretório `./sqlite/`.
 
