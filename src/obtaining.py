@@ -4,6 +4,7 @@ warnings.filterwarnings('ignore')
 from typing import TypedDict
 from datetime import datetime
 import os
+import pandas as pd
 import yfinance as yf
 import numpy as np
 
@@ -14,7 +15,7 @@ class Period(TypedDict):
 
 def getData(ticker: str, period: Period) -> None:
     try:
-        data = yf.download(ticker, period['start'], period['end'])
+        data: pd.DataFrame = yf.download(ticker, period['start'], period['end'])
 
         for index, _ in data.iterrows():
             data.loc[index, 'year'] = index.year

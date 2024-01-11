@@ -14,6 +14,7 @@ from pypfopt import expected_returns
 from sklearn.preprocessing import MinMaxScaler
 
 plt.style.use('ggplot')
+plt.rcParams['figure.figsize'] = [10, 5]
 plt.rc('figure', autolayout=True)
 
 
@@ -32,7 +33,6 @@ def prediction(
         data: pd.DataFrame = pd.read_csv(f'./results/data/{ticker}.csv', index_col='Date', parse_dates=True)
         label: str = f"{ticker} - trained: {data.index.min().strftime('%Y-%m-%d')} -> {data.index.max().strftime('%Y-%m-%d')}"
 
-        # df_train_valid: pd.DataFrame = data[data.index < pd.Timestamp(period['boundary'])][['Adj Close']]
         df_test: pd.DataFrame = data[data.index >= pd.Timestamp(period['boundary'])][['Adj Close']]
 
         scaler: MinMaxScaler = load(f'./results/serialized objects/{ticker}/scaler - {label}.joblib')

@@ -19,54 +19,14 @@ from typing import Callable, Dict, List
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 plt.style.use('ggplot')
+plt.rcParams['figure.figsize'] = [10, 5]
 plt.rc('figure', autolayout=True)
-
-
-def optimize(
-        trial: optuna.Trial,
-        create_model: Callable,
-        create_callbacks: Callable,
-        X_train: np.ndarray,
-        y_train: np.ndarray,
-        X_valid: np.ndarray,
-        y_valid: np.ndarray,
-        ticker: str,
-        label: str,
-        epochs: int,
-        observation_window: Dict[str, int],
-        verbose: int
-    ) -> float:
-    
-    optim: str = trial.suggest_categorical('optim', ['SGD', 'RMSprop', 'Adam', 'Adadelta', 'Adamax'])
-    layers: int = trial.suggest_categorical('layers', [1, 2, 3, 4])
-    n_lstm: int = trial.suggest_categorical('n_lstm', [45, 90, 180])
-    batch_size: int = trial.suggest_categorical('batch_size', [32, 64, 128])
-    dropoutFoward: float = trial.suggest_categorical('dropoutFoward', [0, 0.05]) 
-    
-    modelStudy: Model = create_model(
-        optim=optim,
-        layers=layers,
-        n_lstm=n_lstm,
-        dropoutFoward=dropoutFoward,
-        stepsBack=observation_window['stepsBack'],
-        stepsFoward=observation_window['stepsFoward']
-    )
-
-    history: tf.keras.callbacks.History = modelStudy.fit(
-        X_train,
-        y_train,
-        epochs=epochs,
-        batch_size=batch_size,
-        validation_data=(X_valid, y_valid),
-        callbacks=create_callbacks(ticker, label, True, verbose)
-    )
-    
-    return min(history.history['val_loss'])
 
 
 def train(
         create_model: Callable,
         create_callbacks: Callable,
+        optimizer: Callable,
         tickers: List[str],
         period: Dict[str, str],
         observation_window: Dict[str, int],
@@ -158,7 +118,7 @@ def train(
 
 
         study.optimize(
-            lambda trial: optimize(
+            lambda trial: optimizer(
                 trial,
                 create_model,
                 create_callbacks,
@@ -238,11 +198,13 @@ if __name__ == '__main__':
 
     from model import create_model
     from callbacks import create_callbacks
+    from optimizer import optimizer
     from variables import tickers, period, observation_window, SEED, n_trials_optuna, epochs, verbose
     
     train(
         create_model,
         create_callbacks,
+        optimizer,
         tickers,
         period,
         observation_window,

@@ -37,3 +37,15 @@ def create_model(optim: str,
     model.compile(loss='mean_absolute_percentage_error', optimizer=optim)
 
     return model
+
+if __name__ == '__main__':
+
+    model: Model = create_model(optim='Adagrad',
+                                layers=3,
+                                n_lstm=240,
+                                dropoutFoward=0.05,
+                                stepsBack=240,
+                                stepsFoward=60
+                                )
+    
+    model.summary()

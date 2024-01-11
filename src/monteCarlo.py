@@ -9,6 +9,7 @@ import os
 from typing import List, Dict
 
 plt.style.use('ggplot')
+plt.rcParams['figure.figsize'] = [10, 5]
 plt.rc('figure', autolayout=True)
 
 def monteCarlo(tickers, period, observation_window, monte_carlo_simulation, SEED, graphics=True):
