@@ -26,10 +26,10 @@ observation_window: Dict[str, int] = {
 SEED: int = 25
 
 # Número de tentativas para otimização com Optuna.
-n_trials_optuna: int = 1
+n_trials_optuna: int = 100
 
 # Número de épocas para treinamento do modelo.
-epochs: int = 2
+epochs: int = 1000
 
 # Número de simulações para a simulação de Monte Carlo.
 monte_carlo_simulation: int = 250
@@ -38,7 +38,7 @@ monte_carlo_simulation: int = 250
 verbose: int = 1
 
 # Retorno anual livre de risco (Selic).
-risk_free_rate: float = -0.1
+risk_free_rate: float = 0.1
 
 # Mínimo de participação de um ativo na carteira.
 minimum_participation: float = 0.05
