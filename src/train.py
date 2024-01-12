@@ -70,10 +70,10 @@ def train(
                 plt.xticks(rotation=45)
                 plt.legend(loc = 'best')
 
-                if not os.path.exists(f'./results/graphics/{ticker}/{label}/Training'):
-                    os.makedirs(f'./results/graphics/{ticker}/{label}/Training')
+                if not os.path.exists(f'./results/train/{label}'):
+                    os.makedirs(f'./results/train/{label}')
 
-                plt.savefig(f'./results/graphics/{ticker}/{label}/Training/Divisão de data Treino e Validação - Teste.png')
+                plt.savefig(f'./results/train/{label}/Divisão de data Treino e Validação - Teste.png')
                 plt.close()
 
 
@@ -193,10 +193,10 @@ def train(
                     plt.xticks(rotation=45)
                     plt.legend(loc = 'best')
                                 
-                    if not os.path.exists(f'./results/graphics/{ticker}/{label}/Training'):
-                        os.makedirs(f'./results/graphics/{ticker}/{label}/Training')
+                    if not os.path.exists(f'./results/train/{label}/test'):
+                        os.makedirs(f'./results/train/{label}/test')
                     
-                    plt.savefig(f'./results/graphics/{ticker}/{label}/Training/{pd_adj_close_stepback.index[-1].strftime("%Y-%m-%d")}.png')
+                    plt.savefig(f'./results/train/{label}/test/{pd_adj_close_stepback.index[-1].strftime("%Y-%m-%d")}.png')
                     plt.close()
 
         except Exception as e:

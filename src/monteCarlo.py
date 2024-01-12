@@ -44,24 +44,24 @@ def monteCarlo(tickers, period, observation_window, monte_carlo_simulation, SEED
             forecast.append(precos_simulados[n][-1])
 
         if graphics:
-            plt.title(f'Simulação Monte Carlo Para os Preço em {observation_window["stepsFoward"]} dias (Validação)')
-            plt.hist(forecast, density = True, bins=20)
-            plt.xlabel('Preço')
-            plt.ylabel('Frequência')
+            plt.title(f'Simulação Monte Carlo Para os Preço em {observation_window["stepsFoward"]} dias (Validação) - {ticker}')
+            plt.hist(forecast, bins=20)
+            plt.xlabel('Preço (R$)')
+            plt.ylabel('Ocorrência(s)')
             
-            if not os.path.exists(f'./results/graphics/{ticker}/{label}/Simulation Monte Carlo'):
-                os.makedirs(f'./results/graphics/{ticker}/{label}/Simulation Monte Carlo')
+            if not os.path.exists(f'./results/monte carlo/{label}'):
+                os.makedirs(f'./results/monte carlo/{label}')
             
-            plt.savefig(f'./results/graphics/{ticker}/{label}/Simulation Monte Carlo/[VALIDATION] Return.png')
+            plt.savefig(f'./results/monte carlo/{label}/[VALIDATION] Adj Close Price.png')
             plt.close()
 
-            plt.title(f'Simulação Monte Carlo Para os Preços em {observation_window["stepsFoward"]} dias (Validação)')
+            plt.title(f'Simulação Monte Carlo Para os Preços em {observation_window["stepsFoward"]} dias (Validação) - {ticker}')
 
             soma: List[float] = [0 for _ in range(observation_window["stepsFoward"])]
 
             for _, value in precos_simulados.items():
                 valueSeries: pd.Series = pd.Series(
-                    value[:observation_window["stepsFoward"]],
+                    value[-observation_window["stepsFoward"]:],
                     index=adj_close[:observation_window["stepsFoward"]].index
                 )   
                 
@@ -78,8 +78,10 @@ def monteCarlo(tickers, period, observation_window, monte_carlo_simulation, SEED
             plt.plot(adj_close.index[-observation_window["stepsFoward"]], forecast_mean[-1], 'ro')
             plt.text(adj_close.index[-observation_window["stepsFoward"]], forecast_mean[-1], f'{forecast_mean[-1]:.2f}', fontsize=12, verticalalignment='bottom', horizontalalignment='left')
             plt.xticks(rotation=45)
+            plt.xlabel('Data')
+            plt.ylabel('Valor (R$)')
             plt.legend(loc = 'best') 
-            plt.savefig(f'./results/graphics/{ticker}/{label}/Simulation Monte Carlo/[VALIDATION] Close Price.png')
+            plt.savefig(f'./results/monte carlo/{label}/[VALIDATION] Evolution.png')
 
             plt.close()
 
@@ -102,22 +104,21 @@ def monteCarlo(tickers, period, observation_window, monte_carlo_simulation, SEED
                 
                 forecast.append(precos_simulados[n][-1])
 
-            plt.hist(forecast, density = True)
-            plt.title(f'Simulação Monte Carlo Para os Preço em {observation_window["stepsFoward"]} dias')
-            plt.xlabel('Preço')
-            plt.ylabel('Frequência')            
-            plt.savefig(f'./results/graphics/{ticker}/{label}/Simulation Monte Carlo/Return.png')
+            plt.hist(forecast, bins=20)
+            plt.title(f'Simulação Monte Carlo Para os Preço em {observation_window["stepsFoward"]} dias - {ticker}')
+            plt.xlabel('Preço (R$)')
+            plt.ylabel('Ocorrência(s)')            
+            plt.savefig(f'./results/monte carlo/{label}/Adj Close Price.png')
             plt.close()
 
-
-            plt.title(f'Simulação Monte Carlo Para os Preços em {observation_window["stepsFoward"]} dias')
+            plt.title(f'Simulação Monte Carlo Para os Preços em {observation_window["stepsFoward"]} dias - {ticker}')
 
             soma: List[float] = [0 for _ in range(observation_window["stepsFoward"])]
 
             for _, value in precos_simulados.items():
                 valueSeries: pd.Series = pd.Series(
-                    value[- observation_window["stepsFoward"]:],
-                    index=adj_close.index[- observation_window["stepsFoward"]:])    
+                    value[-observation_window["stepsFoward"]:],
+                    index=adj_close.index[-observation_window["stepsFoward"]:])    
                 plt.plot(valueSeries, linestyle='--', linewidth=1)
                 
                 soma: List[float] = [x + y for x, y in zip(soma, value)]
@@ -131,7 +132,9 @@ def monteCarlo(tickers, period, observation_window, monte_carlo_simulation, SEED
             plt.plot(adj_close.index[-1], forecast_mean[-1], 'ro')
             plt.text(adj_close.index[-1], forecast_mean[-1], f'{forecast_mean[-1]:.2f}', fontsize=12, verticalalignment='bottom', horizontalalignment='left')
             plt.xticks(rotation=45)
-            plt.savefig(f'./results/graphics/{ticker}/{label}/Simulation Monte Carlo/Close Price.png')
+            plt.xlabel('Data')
+            plt.ylabel('Valor (R$)')
+            plt.savefig(f'./results/monte carlo/{label}/Evolution.png')
             plt.close()
 
 
