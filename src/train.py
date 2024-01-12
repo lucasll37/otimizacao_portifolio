@@ -52,8 +52,8 @@ def train(
 
             scaler: MinMaxScaler = MinMaxScaler()
 
-            scaled_df_train_valid: np.ndarray = scaler.fit_transform(df_train_valid.dropna())
-            scaled_df_test: np.ndarray = scaler.transform(df_test.dropna())
+            scaled_df_train_valid: np.ndarray = scaler.fit_transform(df_train_valid)
+            scaled_df_test: np.ndarray = scaler.transform(df_test)
 
             if not os.path.exists(f'./results/serialized objects/{ticker}'):
                 os.makedirs(f'./results/serialized objects/{ticker}')
@@ -71,7 +71,7 @@ def train(
                 if not os.path.exists(f'./results/graphics/{ticker}/{label}/Training'):
                     os.makedirs(f'./results/graphics/{ticker}/{label}/Training')
 
-                plt.savefig(f'./results/graphics/{ticker}/{label}/Training/Divisão de data Treino-Validação.png')
+                plt.savefig(f'./results/graphics/{ticker}/{label}/Training/Divisão de data Treino e Validação - Teste.png')
                 plt.close()
 
 
@@ -159,40 +159,40 @@ def train(
             model.save(f'./results/trained models/{ticker}/{label}.h5')
 
             if graphics:
-                for i in range(240, len(scaled_df_test) - observation_window['stepsFoward']):
+                for i in range(observation_window['stepsBack'], len(scaled_df_test) - observation_window['stepsFoward']):
                     X_temp: np.ndarray = scaled_df_test[i - observation_window['stepsBack']:i, 0]
                     y_temp: np.ndarray = scaled_df_test[i:i + observation_window['stepsFoward'], 0]
 
                     scaled_return_forecast: np.ndarray = model.predict(X_temp.reshape(1, -1, 1))
 
-                    return_forecast: np.ndarray = scaler.inverse_transform(scaled_return_forecast)
-                    return_stepback: np.ndarray = scaler.inverse_transform(X_temp.reshape(-1, 1))
-                    _return: np.ndarray = scaler.inverse_transform(y_temp.reshape(-1, 1))
+                    adj_close_stepback: np.ndarray = scaler.inverse_transform(X_temp.reshape(-1, 1))
+                    adj_close_real: np.ndarray = scaler.inverse_transform(y_temp.reshape(-1, 1))
+                    adj_close_forecast: np.ndarray = scaler.inverse_transform(scaled_return_forecast)
                     
-                    pd_return_stepback: pd.Series = pd.Series(
-                        return_stepback.reshape(-1),
+                    pd_adj_close_stepback: pd.Series = pd.Series(
+                        adj_close_stepback.reshape(-1),
                         index=df_test.index[i - observation_window['stepsBack']:i])
                     
-                    pd_return_forecast: pd.Series = pd.Series(
-                        return_forecast.reshape(-1),
+                    pd_adj_close_forecast: pd.Series = pd.Series(
+                        adj_close_forecast.reshape(-1),
                         index=df_test.index[i:i + observation_window['stepsFoward']])
                     
-                    pd_return: pd.Series = pd.Series(
-                        _return.reshape(-1),
+                    pd_adj_close_real: pd.Series = pd.Series(
+                        adj_close_real.reshape(-1),
                         index=df_test.index[i:i + observation_window['stepsFoward']])
                     
                     # Plot
-                    plt.title(f"Previsão de {ticker} - {pd_return_stepback.index[-1].strftime('%Y-%m-%d')}")
-                    plt.plot(pd_return_stepback, label = 'Adj Close (SteBack)') 
-                    plt.plot(pd_return_forecast, label = 'Adj Close Forecast') 
-                    plt.plot(pd_return, color = 'orange', label = 'Adj Close') 
+                    plt.title(f"Previsão de {ticker} - {pd_adj_close_stepback.index[-1].strftime('%Y-%m-%d')}")
+                    plt.plot(pd_adj_close_stepback, label = 'Adj Close (SteBack)') 
+                    plt.plot(pd_adj_close_forecast, label = 'Adj Close Forecast') 
+                    plt.plot(pd_adj_close_real, color = 'orange', label = 'Adj Close') 
                     plt.xticks(rotation=45)
                     plt.legend(loc = 'best')
                                 
                     if not os.path.exists(f'./results/graphics/{ticker}/{label}/Training'):
                         os.makedirs(f'./results/graphics/{ticker}/{label}/Training')
                     
-                    plt.savefig(f'./results/graphics/{ticker}/{label}/Training/{pd_return_stepback.index[-1].strftime("%Y-%m-%d")}.png')
+                    plt.savefig(f'./results/graphics/{ticker}/{label}/Training/{pd_adj_close_stepback.index[-1].strftime("%Y-%m-%d")}.png')
                     plt.close()
 
         except Exception as e:

@@ -40,12 +40,14 @@ def create_model(optim: str,
 
 if __name__ == '__main__':
 
+    from src.variables import observation_window
+
     model: Model = create_model(optim='Adagrad',
                                 layers=3,
-                                n_lstm=240,
+                                n_lstm=observation_window['stepsBack'],
                                 dropoutFoward=0.05,
-                                stepsBack=240,
-                                stepsFoward=60
+                                stepsBack=observation_window['stepsBack'],
+                                stepsFoward=observation_window['stepsFoward']
                                 )
     
     model.summary()
