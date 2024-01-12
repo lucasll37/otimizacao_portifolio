@@ -43,6 +43,7 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
 ### tickers
 - `tickers`: Lista de tickers para os quais as análises serão feitas. Siga convenção do Yahoo Finance disponível [aqui](https://finance.yahoo.com/).
 - Exemplo:
+
   ```python
   tickers: List[str] = ["EMBR3.SA", "BRPR3.SA", ...]
     ```
@@ -50,6 +51,7 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
 ### period
 - `period`: Dicionário definindo os períodos de interesse para análise. `period['boundary']` define o limite entre os períodos de treinamento e teste. O formato deve ser YYYY-MM-DD e os dias devem ser úteis (deve haver cotação para o ativo na dada em questão).
 - Exemplo:
+
   ```python
   period: Dict[str, str] = {
       "start": "2013-07-02",
@@ -60,6 +62,7 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
 ### observation_window
 - `observation_window`: Dicionário definindo a janela de observação para análise. Interprete: O modelo observa o preço de fechamento dos últimos *stepsBack* dias e, com base neles, infere o preço de fechamento dos próximos *stepsFoward* dias.
 - Exemplo:
+
   ```python
   observation_window: Dict[str, int] = {
       "stepsBack": 240,
@@ -70,6 +73,7 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
 ### SEED
 - `SEED`: Semente para garantir a reprodutibilidade em processos aleatórios.
 - Exemplo:
+
   ```python
   SEED: int = 25
   ```
@@ -77,6 +81,7 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
 ### n_trials_optuna
 - `n_trials_optuna`: Número de tentativas para otimização com [Optuna](https://optuna.org/).
 - Exemplo:
+
   ```python
   n_trials_optuna: int = 10
   ```
@@ -84,6 +89,7 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
 ### epochs
 - `epochs`: Número de épocas para treinamento do modelo.
 - Exemplo:
+
   ```python
   epochs: int = 100000
   ```
@@ -91,6 +97,7 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
 ### monte_carlo_simulation
 - `monte_carlo_simulation`: Número de simulações para a simulação de Monte Carlo.
 - Exemplo:
+
   ```python
   monte_carlo_simulation: int = 250
   ```
@@ -98,6 +105,7 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
 ### verbose
 - `verbose`: Nível de verbosidade para a saída de logs.
 - Exemplo:
+
   ```python
   verbose: int = 1
   ```
@@ -105,6 +113,7 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
 ### risk_free_rate
 - `risk_free_rate`: Retorno anual livre de risco (Selic).
 - Exemplo:
+
   ```python
   risk_free_rate: float = 0.1
   ```
@@ -112,6 +121,7 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
 ### minimum_participation
 - `minimum_participation`: Mínimo de participação de um ativo na carteira.
 - Exemplo:
+
   ```python
   minimum_participation: float = 0.01
   ```
@@ -119,13 +129,14 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
 ### maximum_participation
 - `maximum_participation`: Máximo de participação de um ativo na carteira.
 - Exemplo:
-```python
-minimum_participation: float = 0.15
-```
+
+  ```python
+  minimum_participation: float = 0.15
+  ```
 
 ## Executar o projeto
 ```bash
-python ./main.py [OPTIONAL ARGUMENTS]
+python -u ./main.py [flags]
 ```
 ### Comportamento
 Faz o download dos dados, treina o modelo, faz a previsão, gera simulação de Monte Carlo para a evolução dos preços e otimiza o portfólio com base no retorno esperado obtido via IA.
@@ -139,23 +150,44 @@ Faz o download dos dados, treina o modelo, faz a previsão, gera simulação de 
 
 - `--no-ai`: Executa a otimização do portifolio com base no retorno esperado obtido via média histórica. Implicitamente, não realiza o treinamento do modelo, não faz a previsão do retorno esperado e não faz a simulação de Monte Carlo.
 
+- `--only-train`: Não executa projeto, somente realiza download dos dados (a depender da flag `--no-download`) e o treinamento do modelo (a depender da flag `--no-ai`).
+
+#### Obs.:
+Apesar de inapropriado o uso combinado de certas *flags*, existe a seguinte ordem de prioridade:
+
+- A flag `--no-download` sobrepuja a flag `--only-download`.
+- A flag `--no-train` sobrepuja a flag `--only-train`.
+- A flag `--no-ai` sobrepuja a flag `--only-train`.
+
 #### Exemplos
-- Realiza o download dos dados.
+- Executa o projeto da maneira *default* tal como descrito em **Comportamento**.
 
   ```bash
-  python ./main.py --only-download
+  python -u ./main.py
+  ```
+
+- Realiza somente o download dos dados.
+
+  ```bash
+  python -u ./main.py --only-download
+  ```
+
+  - Realiza somente o treinamento dos modelos.
+
+  ```bash
+  python -u ./main.py --no-download --only-train
   ```
 
 - Realiza otimização de portfólio com base no retorno esperado obtido via IA, sem realizar o download dos dados e sem treinar o modelo.
 
   ```bash
-  python ./main.py --no-download --no-train
+  python -u ./main.py --no-download --no-train
   ```
 
 - Realiza otimização de portfólio com base no retorno esperado obtido via média histórica sem realizar o download dos dados.
 
   ```bash
-  python ./main.py --no-download --no-ai
+  python -u ./main.py --no-download --no-ai
   ```
 
 ## Estrutura do Projeto

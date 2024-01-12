@@ -3,7 +3,7 @@ from typing import List, Dict
 # Lista de tickers para os quais as análises serão feitas.
 tickers: List[str] = [
     "ABEV3.SA",     # Ambev S.A
-    "ALOS3.SA",     # Aliansce Sonae Shopping Centers S.A
+    # "ALOS3.SA",     # Aliansce Sonae Shopping Centers S.A
     "ALPA4.SA",     # Alpargatas S.A
     "ARZZ3.SA",     # Arezzo Indústria e Comércio S.A
     "ASAI3.SA",     # Assaí Atacadista S.A
@@ -121,7 +121,7 @@ monte_carlo_simulation: int = 250
 verbose: int = 1
 
 # Retorno anual livre de risco (Selic).
-risk_free_rate: float = 0.1
+risk_free_rate: float = 0.07
 
 # Mínimo de participação de um ativo na carteira.
 minimum_participation: float = 0.02 # 2%

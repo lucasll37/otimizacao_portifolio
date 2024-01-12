@@ -26,6 +26,7 @@ def backtest(tickers, period, observation_window) -> None:
 
     pesos: pd.DataFrame = pd.read_csv('./results/portfolio/pesos.csv', index_col='Ticker')
 
+
     real_return: pd.Series = expected_returns.mean_historical_return(adjClosePrice)
     cov_matrix: pd.DataFrame = risk_models.sample_cov(adjClosePrice)
 

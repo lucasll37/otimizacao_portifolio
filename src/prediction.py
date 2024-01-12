@@ -31,7 +31,7 @@ def prediction(
 
     for ticker in tickers:
         data: pd.DataFrame = pd.read_csv(f'./results/data/{ticker}.csv', index_col='Date', parse_dates=True)
-        label: str = f"{ticker} - trained: {data.index.min().strftime('%Y-%m-%d')} -> {data.index.max().strftime('%Y-%m-%d')}"
+        label: str = f"{ticker} period {data.index.min().strftime('%Y-%m-%d')} - {data.index.max().strftime('%Y-%m-%d')}"
 
         df_test: pd.DataFrame = data[data.index >= pd.Timestamp(period['boundary'])][['Adj Close']]
 
@@ -41,10 +41,10 @@ def prediction(
         X_test: pd.DataFrame = data[['Adj Close']].iloc[-observation_window['stepsBack'] - observation_window['stepsFoward'] : - observation_window['stepsFoward']]
         scaler_X_test: np.ndarray = scaler.transform(X_test)
         scaled_adj_close_test: np.ndarray = model.predict(scaler_X_test.reshape(1, -1, 1))
-        adj_close_test: np.ndarray = scaler.inverse_transform(scaled_adj_close_test)
+        np_adj_close_test: np.ndarray = scaler.inverse_transform(scaled_adj_close_test)
 
         adj_close_test: pd.DataFrame = pd.DataFrame(
-            adj_close_test.reshape(-1, 1),
+            np_adj_close_test.reshape(-1, 1),
             index=data[-observation_window['stepsFoward']:].index,
             columns=['Adj Close Test']
         )
@@ -84,6 +84,8 @@ def prediction(
         info.loc[ticker, 'Test Volatility'] = X_test[['Adj Close']].pct_change().dropna().std()['Adj Close']
         info.loc[ticker, 'Test Drift'] = (1 + expected_returns.mean_historical_return(adj_close_test)['Adj Close Test']) ** (1/len(adj_close_forecast)) - 1
         info.to_csv('./results/prediction/Expected Return.csv')
+
+        print(X_test)
 
         if graphics:
             plt.title("Previsão do preço de Fechamento Ajustado")

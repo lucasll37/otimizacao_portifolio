@@ -19,7 +19,7 @@ def monteCarlo(tickers, period, observation_window, monte_carlo_simulation, SEED
 
     for ticker in tickers:
         data: pd.DataFrame = pd.read_csv(f'./results/data/{ticker}.csv', index_col='Date', parse_dates=True)
-        label: str = f"{ticker} - trained: {data.index.min().strftime('%Y-%m-%d')} -> {data.index.max().strftime('%Y-%m-%d')}"
+        label: str = f"{ticker} period {data.index.min().strftime('%Y-%m-%d')} - {data.index.max().strftime('%Y-%m-%d')}"
 
         adj_close: pd.DataFrame = pd.read_csv(f'./results/prediction/{ticker}/{label}/Adj Close.csv', index_col='Date', parse_dates=True)
         prediction: pd.DataFrame = pd.read_csv(f'./results/prediction/Expected Return.csv', index_col='Ticker')

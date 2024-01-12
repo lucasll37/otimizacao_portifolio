@@ -31,8 +31,7 @@ def make_portfolio(tickers: List[str],
     adjClosePrice.fillna(method = 'ffill', inplace=True)
 
     data: pd.DataFrame = pd.read_csv(f'./results/data/{tickers[0]}.csv', index_col='Date', parse_dates=True)
-
-    label_w_ticker: str = f"trained: {data.index.min().strftime('%Y-%m-%d')} -> {data.index.max().strftime('%Y-%m-%d')}"
+    label_w_ticker: str = f"period {data.index.min().strftime('%Y-%m-%d')} - {data.index.max().strftime('%Y-%m-%d')}"
     
     if use_ia:
         df_expected_return: pd.DataFrame = pd.read_csv('./results/prediction/Expected Return.csv', index_col='Ticker')
@@ -66,15 +65,16 @@ def make_portfolio(tickers: List[str],
 
     pesos: pd.Series = pd.Series(pesos_limpos)
 
-    ##########################
     test: pd.DataFrame = pd.DataFrame(columns=['Peso'])
     test.index.name = 'Ticker'
     for ticker, peso in zip(tickers, pesos):
         if peso > 0:
             test.loc[ticker, 'Peso'] = peso
         
+    if not os.path.exists(f'./results/portfolio'):
+        os.makedirs(f'./results/portfolio')
+
     test.to_csv('./results/portfolio/pesos.csv')
-    ##########################
 
     pesos: pd.Series = pesos[pesos >= minimum_participation]
     explode: List[float] = [0.1 for _ in range(len(pesos))]
@@ -83,9 +83,6 @@ def make_portfolio(tickers: List[str],
     text: str = f'Expected annual return: {performance[0]:.1%} \
                   \nAnnual volatility: {performance[1]:.1%} \
                   \nSharpe Ratio: {performance[2]:.2f}'
-
-    if not os.path.exists(f'./results/portfolio'):
-        os.makedirs(f'./results/portfolio')
 
     percentuais: List[float] = [f'{p:.1f}%' for p in pesos.values * 100]
     legend_labels: List[str] = [f'{index[:-3]} - {percentual}' for index, percentual in zip(pesos.index, percentuais)]

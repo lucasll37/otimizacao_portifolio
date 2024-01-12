@@ -40,6 +40,9 @@ def main():
                 graphics=True,
                 verbose=verbose
             )
+            
+        if "--only-train" in sys.argv:
+            return
 
         prediction(tickers, period, SEED, observation_window, graphics=True)
         
