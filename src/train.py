@@ -55,10 +55,10 @@ def train(
             scaled_df_train_valid: np.ndarray = scaler.fit_transform(df_train_valid)
             scaled_df_test: np.ndarray = scaler.transform(df_test)
 
-            if not os.path.exists(f'./results/serialized objects/{ticker}'):
-                os.makedirs(f'./results/serialized objects/{ticker}')
+            if not os.path.exists(f'./results/serialized objects/{label}'):
+                os.makedirs(f'./results/serialized objects/{label}')
             
-            dump(scaler, f'./results/serialized objects/{ticker}/scaler - {label}.joblib')
+            dump(scaler, f'./results/serialized objects/{label}/scaler - {ticker}.joblib')
             
             
             if graphics:
@@ -158,7 +158,7 @@ def train(
                 callbacks = create_callbacks(ticker, label, False, verbose)
             )
 
-            model.save(f'./results/trained models/{ticker}/{label}.h5')
+            model.save(f'./results/trained models/{label}.h5')
 
             if graphics:
                 for i in range(observation_window['stepsBack'], len(scaled_df_test) - observation_window['stepsFoward']):

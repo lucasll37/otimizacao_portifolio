@@ -22,7 +22,7 @@ def create_callbacks(ticker: str, label: str, optim: bool = False, verbose: int 
                                 min_delta=0.0001,
                                 min_lr=0)
     
-    tensorboard: Callback = TensorBoard(log_dir=f'./results/logs/{ticker}/{label}', histogram_freq=1)
+    tensorboard: Callback = TensorBoard(log_dir=f'./results/logs/{label}', histogram_freq=1)
 
 
     callbacks: List[Callback] = [earlystop, reduceLr, tensorboard, TerminateOnNaN()]

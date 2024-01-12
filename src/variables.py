@@ -7,7 +7,7 @@ tickers: List[str] = [
     # "ALPA4.SA",     # Alpargatas S.A
     # "ARZZ3.SA",     # Arezzo Indústria e Comércio S.A
     # "ASAI3.SA",     # Assaí Atacadista S.A
-    # "AZUL4.SA",     # Azul S.A
+    "AZUL4.SA",     # Azul S.A
     # "B3SA3.SA",     # B3 - Brasil Bolsa Balcão S.A
     # "BBDC3.SA",     # Banco Bradesco S.A
     # "BBDC4.SA",     # Banco Bradesco S.A
@@ -121,7 +121,7 @@ monte_carlo_simulation: int = 250
 verbose: int = 1
 
 # Retorno anual livre de risco (Selic).
-risk_free_rate: float = 0.07
+risk_free_rate: float = 0.00007
 
 # Mínimo de participação de um ativo na carteira.
 minimum_participation: float = 0.02 # 2%

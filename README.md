@@ -211,6 +211,7 @@ otimizacao_portifolio/
 ├── src/
 │   ├── __pycache__
 │   ├── __init__.py
+│   ├── backtest.py
 │   ├── callbacks.py
 │   ├── model.py
 │   ├── monteCarlo.py
@@ -250,6 +251,7 @@ otimizacao_portifolio/
 
   - `__pycache__/`: Contém arquivos de bytecode compilados que são criados pelo Python para acelerar a inicialização do programa.
   - `__init__.py`: Arquivo necessário para tratar o diretório como um módulo Python, possibilitando a importação de arquivos dentro deste diretório.
+  - `backtest.py`: Realiza backtesting no portfolio para o período de projeção (*observation_window['stepsFoward']*).
   - `callbacks.py`: Define funções de callback que podem ser usadas durante o treinamento de modelos para, por exemplo, salvar checkpoints, ajustar parâmetros ou monitorar o desempenho.
   - `model.py`: Inclui a definição e a configuração do modelo de machine learning utilizado no projeto.
   - `monteCarlo.py`: Implementa simulações de Monte Carlo, que podem ser usadas para projeções financeiras, análise de risco, etc.

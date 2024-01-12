@@ -33,14 +33,13 @@ def create_model(optim: str,
 
     model.add(Dense(stepsFoward, activation='linear'))
 
-    # model.compile(loss='mean_squared_error', optimizer=optim)
-    model.compile(loss='mean_absolute_percentage_error', optimizer=optim)
+    model.compile(loss='mean_squared_error', optimizer=optim)
 
     return model
 
 if __name__ == '__main__':
 
-    from src.variables import observation_window
+    from variables import observation_window
 
     model: Model = create_model(optim='Adagrad',
                                 layers=3,

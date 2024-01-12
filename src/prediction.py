@@ -31,12 +31,12 @@ def prediction(
 
     for ticker in tickers:
         data: pd.DataFrame = pd.read_csv(f'./results/data/{ticker}.csv', index_col='Date', parse_dates=True)
-        label: str = f"{ticker} period {data.index.min().strftime('%Y-%m-%d')} - {data.index.max().strftime('%Y-%m-%d')}"
+        train_label: str = f"{ticker} period {data.index.min().strftime('%Y-%m-%d')} - {data.index.max().strftime('%Y-%m-%d')}"
 
         df_test: pd.DataFrame = data[data.index >= pd.Timestamp(period['boundary'])][['Adj Close']]
 
-        scaler: MinMaxScaler = load(f'./results/serialized objects/{ticker}/scaler - {label}.joblib')
-        model: keras.models.Model = keras.models.load_model(f'./results/trained models/{ticker}/{label}.h5')
+        scaler: MinMaxScaler = load(f'./results/serialized objects/{train_label}/scaler - {ticker}.joblib')
+        model: keras.models.Model = keras.models.load_model(f'./results/trained models/{train_label}.h5')
 
         X_test: pd.DataFrame = data[['Adj Close']].iloc[-observation_window['stepsBack'] - observation_window['stepsFoward'] : - observation_window['stepsFoward']]
         scaler_X_test: np.ndarray = scaler.transform(X_test)
@@ -67,10 +67,12 @@ def prediction(
         adj_close.index.name = 'Date'
         adj_close: pd.DataFrame = adj_close.groupby(adj_close.index).sum()
 
-        if not os.path.exists(f'./results/prediction/{ticker}/{label}'):
-            os.makedirs(f'./results/prediction/{ticker}/{label}')
+        label: str = f"{ticker} period {adj_close_forecast.index.min().strftime('%Y-%m-%d')} - {adj_close_forecast.index.max().strftime('%Y-%m-%d')}"
 
-        adj_close.to_csv(f'./results/prediction/{ticker}/{label}/Adj Close.csv')
+        if not os.path.exists(f'./results/prediction/{label}'):
+            os.makedirs(f'./results/prediction/{label}')
+
+        adj_close.to_csv(f'./results/prediction/{label}/Adj Close.csv')
 
         try:
             info: pd.DataFrame = pd.read_csv('./results/prediction/Expected Return.csv', index_col='Ticker')
@@ -110,7 +112,7 @@ def prediction(
             plt.xlabel('Data')
             plt.ylabel('Valor (R$)')
             plt.xticks(rotation=45)
-            plt.savefig(f'./results/prediction/{ticker}/{label}/return.png')
+            plt.savefig(f'./results/prediction/{label}/Adj Close.png')
             plt.close()
 
 if __name__ == '__main__':
