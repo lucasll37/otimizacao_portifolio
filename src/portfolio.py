@@ -45,7 +45,7 @@ def make_portfolio(tickers: List[str],
     
     cov_matrix: pd.DataFrame = risk_models.sample_cov(adjClosePrice)
 
-    pre_ef: EfficientFrontier = EfficientFrontier(forecast_return, cov_matrix)
+    pre_ef: EfficientFrontier = EfficientFrontier(forecast_return, cov_matrix, solver='CLARABEL') # ['CLARABEL', 'ECOS', 'ECOS_BB', 'OSQP', 'SCIPY', 'SCS']
     pre_ef.add_constraint(lambda w: w >= 0)
     pre_ef.add_constraint(lambda w: w <= maximum_participation)
 
