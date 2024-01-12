@@ -30,9 +30,7 @@ def make_portfolio(tickers: List[str],
     adjClosePrice: pd.DataFrame = yf.download(tickers, start = period['start'], end = period['end'], progress=False)["Adj Close"]
     adjClosePrice.fillna(method = 'ffill', inplace=True)
 
-    data: pd.DataFrame = pd.read_csv(f'./results/data/{tickers[0]}.csv', index_col='Date', parse_dates=True)
-    label_w_ticker: str = f"period {data.index.min().strftime('%Y-%m-%d')} - {data.index.max().strftime('%Y-%m-%d')}"
-    
+    label_w_ticker: str = f"period {adjClosePrice.index.min().strftime('%Y-%m-%d')} - {adjClosePrice.index.max().strftime('%Y-%m-%d')}"
     if use_ia:
         df_expected_return: pd.DataFrame = pd.read_csv('./results/prediction/Expected Return.csv', index_col='Ticker')
         aux_expected_return: Dict[str, float] = {}
@@ -47,23 +45,33 @@ def make_portfolio(tickers: List[str],
     
     cov_matrix: pd.DataFrame = risk_models.sample_cov(adjClosePrice)
 
-    ef: EfficientFrontier = EfficientFrontier(forecast_return, cov_matrix)
-    ef.add_constraint(lambda w: w >= 0)
-    ef.add_constraint(lambda w: w <= maximum_participation)
-    ef.max_sharpe(risk_free_rate = risk_free_rate)
+    pre_ef: EfficientFrontier = EfficientFrontier(forecast_return, cov_matrix)
+    pre_ef.add_constraint(lambda w: w >= 0)
+    pre_ef.add_constraint(lambda w: w <= maximum_participation)
 
-    pre_pesos: Dict[str, float] = ef.clean_weights()
-    pesos_restritos = {k: (v if v > minimum_participation else 0) for k, v in pre_pesos.items()}
+    try:
+        pre_ef.max_sharpe(risk_free_rate = risk_free_rate) # maximal Sharpe ratio (a.k.a the tangency portfolio)
+        # pre_ef.min_volatility() # minimum volatility
+        # pre_ef.max_quadratic_utility() # maximises the quadratic utility, given some risk aversion.
+        # pre_ef.efficient_risk(target_volatility=0.3) # maximises return for a given target risk
+        # pre_ef.efficient_return(target_return=0.4) # minimises risk for a given target return
+
+    except Exception as e:
+        print(f"\nLimites e Restrições Inalcançáveis! Verifique a integridade dos dados baixados em ./src/data ou tente fornecer mais opções de ações\n")
+        return
+
+    raw_weights: Dict[str, float] = pre_ef.clean_weights()
+    restrict_weights = {k: (v if v > minimum_participation else 0) for k, v in raw_weights.items()}
 
     ef = EfficientFrontier(forecast_return, cov_matrix)
-    ef.add_constraint(lambda w: w >= 0)
     ef.add_constraint(lambda w: w <= maximum_participation)
-    ef.set_weights(pesos_restritos)
+    ef.set_weights(restrict_weights)
 
     performance: Tuple[float, float, float] = ef.portfolio_performance(verbose = False)
     pesos_limpos = ef.clean_weights() 
 
     pesos: pd.Series = pd.Series(pesos_limpos)
+    pesos = pesos[pesos >= minimum_participation]
 
     test: pd.DataFrame = pd.DataFrame(columns=['Peso'])
     test.index.name = 'Ticker'
@@ -74,9 +82,8 @@ def make_portfolio(tickers: List[str],
     if not os.path.exists(f'./results/portfolio'):
         os.makedirs(f'./results/portfolio')
 
-    test.to_csv('./results/portfolio/pesos.csv')
+    test.to_csv('./results/portfolio/weight.csv')
 
-    pesos: pd.Series = pesos[pesos >= minimum_participation]
     explode: List[float] = [0.1 for _ in range(len(pesos))]
 
 
@@ -95,16 +102,18 @@ def make_portfolio(tickers: List[str],
     ax.set_title(f"Portifólio Otimizado - {label_w_ticker}")
     fig.subplots_adjust(bottom=0.25)
     fig.text(0.75, 0.15, text, wrap=True, ha='left', va='top', fontsize=8)
-    plt.tight_layout()
     plt.savefig(f'./results/portfolio/Portifólio Otimizado - {label_w_ticker}.png')
     plt.close()
 
     ef = EfficientFrontier(forecast_return, cov_matrix)
     _, ax = plt.subplots(figsize=(10, 5))
-    plotting.plot_efficient_frontier(ef, ax=ax, show_assets=True, risk_free_rate = risk_free_rate, market_map=True)
+    plotting.plot_efficient_frontier(ef, ax=ax, show_assets=True, risk_free_rate = risk_free_rate)
     plt.title(f'Fronteira Eficiente de Markowitz - {label_w_ticker}')
+    plt.plot(performance[1], performance[0], 'bo', label=f'Portifólio Otimizado - Sharpe Ratio: {performance[2]:.2f} %')
+    plt.legend(loc='best')
     plt.savefig(f'./results/portfolio/Fronteira de Eficiência - {label_w_ticker}.png')
     plt.close()
+
 
 if __name__ == '__main__':
 

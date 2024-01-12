@@ -190,6 +190,15 @@ Apesar de inapropriado o uso combinado de certas *flags*, existe a seguinte orde
   python -u ./main.py --no-download --no-ai
   ```
 
+## Backtest
+O backtest é executado separadamente do projeto. O seu correto funcionamento depende da escolha adequada de datas no arquivo de variáveis `./src/variables.py` (*period*). Por razões claras, *period['end']* deve ser uma data pretérita. O backtesting é feito no periodo que sucede *observation_window['stepsFoward']* dias a data *period['end']*. **Certifique-se de que os dados desse período estejam disponíveis!**
+
+Por fim, uma vez tendo executado o projeto (existência do diretório `./results`), execute o seguinte comando:
+
+```bash
+python -u ./src/backtest.py
+```
+
 ## Estrutura do Projeto
 ```
 otimizacao_portifolio/
@@ -215,7 +224,7 @@ otimizacao_portifolio/
 │   ├── callbacks.py
 │   ├── model.py
 │   ├── monteCarlo.py
-│   ├── obtaining.py
+│   ├── data.py
 │   ├── optimizer.py
 │   ├── portfolio.py
 │   ├── prediction.py
@@ -238,6 +247,7 @@ otimizacao_portifolio/
 - `.history/`: Contém arquivos de histórico gerados por algumas ferramentas de desenvolvimento.
 - `results/`: Armazena os outputs do projeto, como dados processados, gráficos, logs, objetos serializados e modelos treinados.
 
+    - `backtest/`: Resultados do backtesting.
     - `data/`: Dados financeiros históricos.
     - `graphics/`: Gráficos e visualizações gerados no treinamento.
     - `logs/`: Logs do treinamento (tensorboard).
@@ -255,7 +265,7 @@ otimizacao_portifolio/
   - `callbacks.py`: Define funções de callback que podem ser usadas durante o treinamento de modelos para, por exemplo, salvar checkpoints, ajustar parâmetros ou monitorar o desempenho.
   - `model.py`: Inclui a definição e a configuração do modelo de machine learning utilizado no projeto.
   - `monteCarlo.py`: Implementa simulações de Monte Carlo, que podem ser usadas para projeções financeiras, análise de risco, etc.
-  - `obtaining.py`: Responsável pela aquisição, limpeza e pré-processamento de dados.
+  - `data.py`: Responsável pela aquisição, limpeza e pré-processamento de dados.
   - `optimizer.py`: Responsável pela otimização dos hiperpâmetros do modelo.
   - `portfolio.py`: Contém lógicas relacionadas à gestão e análise de portfólios de investimentos.
   - `prediction.py`: Funções e scripts dedicados à realização de previsões com base no modelo treinado.
@@ -285,7 +295,3 @@ otimizacao_portifolio/
 
 ## Licença
 Este projeto está sob a licença XYZ - veja o arquivo LICENSE para detalhes.
-
-## A Fazer
-- Depedencias no `./requirements.txt`.
-- Testar em outro ambiente.

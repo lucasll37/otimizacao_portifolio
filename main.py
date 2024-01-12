@@ -2,7 +2,7 @@ from warnings import filterwarnings
 filterwarnings('ignore')
 
 import sys
-from src.obtaining import getData
+from src.data import getData
 from src.callbacks import create_callbacks
 from src.model import create_model
 from src.optimizer import optimizer

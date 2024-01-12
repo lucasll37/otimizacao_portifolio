@@ -7,7 +7,6 @@ import optuna
 import os
 import matplotlib.pyplot as plt
 import random
-import tensorflow as tf
 from keras.models import Model
 from keras.callbacks import History
 
@@ -58,7 +57,7 @@ def train(
             if not os.path.exists(f'./results/serialized objects/{label}'):
                 os.makedirs(f'./results/serialized objects/{label}')
             
-            dump(scaler, f'./results/serialized objects/{label}/scaler - {ticker}.joblib')
+            dump(scaler, f'./results/serialized objects/{label}/scaler.joblib')
             
             
             if graphics:
@@ -111,12 +110,12 @@ def train(
             y_test: np.ndarray = np.array(y_test)
             X_test: np.ndarray = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
 
-            if not os.path.exists(f'./sqlite/{ticker}'):
-                os.makedirs(f'./sqlite/{ticker}')
+            if not os.path.exists(f'./sqlite/{label}'):
+                os.makedirs(f'./sqlite/{label}')
 
             study: optuna.study.Study = optuna.create_study(
                 study_name=label,
-                storage=f"sqlite:///./sqlite/{ticker}/{label}.db",
+                storage=f"sqlite:///./sqlite/{label}/study.db",
                 load_if_exists=True,
                 direction='minimize'
             )
@@ -158,7 +157,7 @@ def train(
                 callbacks = create_callbacks(ticker, label, False, verbose)
             )
 
-            model.save(f'./results/trained models/{label}.h5')
+            model.save(f'./results/trained models/{label}/model.h5')
 
             if graphics:
                 for i in range(observation_window['stepsBack'], len(scaled_df_test) - observation_window['stepsFoward']):
@@ -182,8 +181,7 @@ def train(
                     pd_adj_close_real: pd.Series = pd.Series(
                         adj_close_real.reshape(-1),
                         index=df_test.index[i:i + observation_window['stepsFoward']])
-                    
-                    # Plot
+
                     plt.title(f"Previsão de {ticker} - {pd_adj_close_stepback.index[-1].strftime('%Y-%m-%d')}")
                     plt.plot(pd_adj_close_stepback, label = 'Adj Close (SteBack)') 
                     plt.plot(pd_adj_close_forecast, label = 'Adj Close Forecast') 

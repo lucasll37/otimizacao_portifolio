@@ -1,4 +1,5 @@
 import warnings
+
 warnings.filterwarnings('ignore')
 
 import pandas as pd
@@ -7,6 +8,7 @@ import matplotlib.pyplot as plt
 import random
 import os
 import yfinance as yf
+import matplotlib.dates as mdates
 from pandas.tseries.offsets import BDay
 from pypfopt import expected_returns, risk_models
 from typing import Dict, List, Tuple
@@ -24,16 +26,15 @@ def backtest(tickers, period, observation_window) -> None:
     adjClosePrice: pd.DataFrame = yf.download(tickers, start, end, progress=False)["Adj Close"]
     adjClosePrice.fillna(method = 'ffill', inplace=True)
 
-    pesos: pd.DataFrame = pd.read_csv('./results/portfolio/pesos.csv', index_col='Ticker')
+    weights: pd.DataFrame = pd.read_csv('./results/portfolio/weight.csv', index_col='Ticker')
 
-
-    real_return: pd.Series = expected_returns.mean_historical_return(adjClosePrice)
+    real_return: pd.Series = expected_returns.mean_historical_return(adjClosePrice, frequency=observation_window['stepsFoward'])
     cov_matrix: pd.DataFrame = risk_models.sample_cov(adjClosePrice)
 
     performance: pd.DataFrame = pd.DataFrame(columns=['Weight', 'Risk', 'Return', 'Weighted Return'])
     performance.index.name = 'Ticker'
 
-    for ticker, row in pesos.iterrows():
+    for ticker, row in weights.iterrows():
         performance.loc[ticker, 'Risk'] = np.sqrt(cov_matrix.loc[ticker, ticker])
         performance.loc[ticker, 'Weight'] = row['Peso']
         performance.loc[ticker, 'Return'] = real_return[ticker]
@@ -41,18 +42,38 @@ def backtest(tickers, period, observation_window) -> None:
     performance['Weighted Return'] = performance['Return'] * performance['Weight']
 
     performance.loc['TOTAL', 'Weight'] = performance['Weight'].sum()
-    performance.loc['TOTAL', 'Risk'] = 0.02 #np.sqrt(np.dot(pesos.T, np.dot(cov_matrix, pesos)))
     performance.loc['TOTAL', 'Weighted Return'] = performance['Weighted Return'].sum()
         
-    performance.to_csv('./results/portfolio/backtest.csv')
+    if not os.path.exists(f'./results/backtest'):
+        os.makedirs(f'./results/backtest')
+
+    performance.to_csv('./results/backtest/backtest.csv')
 
     print(f"\n\nPerformance do Portifólio\n \
           \nInício: {start} \
           \nTérmino: {end} \
           \n\nRendimento: {performance.loc['TOTAL', 'Weighted Return'] * 100:.2f} % \
-          \nRisco: {performance.loc['TOTAL', 'Risk'] * 100:.2f} % \
           \n\n")
+    
+    fig, axes = plt.subplots(nrows=len(weights), ncols=1, figsize=(10, 5 * len(weights)))  # Ajuste o tamanho conforme necessário
+    fig.suptitle(f"Backtest - {start} - {end}")
 
+    for i, (ticker, row) in enumerate(weights.iterrows()):
+        ax = axes[i]
+        ax.plot(adjClosePrice[ticker], label = f'{ticker} - {row["Peso"] * 100:.1f} %') 
+
+        ax.set_ylabel('Valor (R$)')
+        ax.set_xlabel('Data')
+        ax.legend(loc='upper left')
+        ax.set_xticklabels(adjClosePrice.index, rotation=45)
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+
+
+    fig.subplots_adjust(top=0.95)  # Ajuste conforme necessário para o título principal
+
+    # Salvando a figura
+    plt.savefig(f'./results/backtest/result.png')
+    plt.close(fig)
 
     
 if __name__ == '__main__':

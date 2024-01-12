@@ -35,8 +35,8 @@ def prediction(
 
         df_test: pd.DataFrame = data[data.index >= pd.Timestamp(period['boundary'])][['Adj Close']]
 
-        scaler: MinMaxScaler = load(f'./results/serialized objects/{train_label}/scaler - {ticker}.joblib')
-        model: keras.models.Model = keras.models.load_model(f'./results/trained models/{train_label}.h5')
+        scaler: MinMaxScaler = load(f'./results/serialized objects/{train_label}/scaler.joblib')
+        model: keras.models.Model = keras.models.load_model(f'./results/trained models/{train_label}/model.h5')
 
         X_test: pd.DataFrame = data[['Adj Close']].iloc[-observation_window['stepsBack'] - observation_window['stepsFoward'] : - observation_window['stepsFoward']]
         scaler_X_test: np.ndarray = scaler.transform(X_test)
