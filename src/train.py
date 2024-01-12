@@ -65,6 +65,8 @@ def train(
                 plt.title(f"Divisão de data Treino/Validação - {ticker}")
                 plt.plot(df_train_valid.index, df_train_valid['Adj Close'], label = 'Dados de Treino e Validação') 
                 plt.plot(df_test.index, df_test['Adj Close'], label = 'Dados de Teste') 
+                plt.xlabel('Data')
+                plt.ylabel('Valor (R$)')
                 plt.xticks(rotation=45)
                 plt.legend(loc = 'best')
 
@@ -185,7 +187,9 @@ def train(
                     plt.title(f"Previsão de {ticker} - {pd_adj_close_stepback.index[-1].strftime('%Y-%m-%d')}")
                     plt.plot(pd_adj_close_stepback, label = 'Adj Close (SteBack)') 
                     plt.plot(pd_adj_close_forecast, label = 'Adj Close Forecast') 
-                    plt.plot(pd_adj_close_real, color = 'orange', label = 'Adj Close') 
+                    plt.plot(pd_adj_close_real, color = 'orange', label = 'Adj Close Real') 
+                    plt.xlabel('Data')
+                    plt.ylabel('Valor (R$)')
                     plt.xticks(rotation=45)
                     plt.legend(loc = 'best')
                                 

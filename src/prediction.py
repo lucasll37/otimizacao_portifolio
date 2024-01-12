@@ -63,6 +63,7 @@ def prediction(
         real_adj_close_test: pd.DataFrame = data[['Adj Close']][-observation_window['stepsFoward']:]
         real_adj_close_test.rename(columns={'Adj Close': 'Real Adj Close Test'}, inplace= True)
         adj_close: pd.DataFrame = pd.concat([real_adj_close_test, adj_close_test, adj_close_forecast])
+        adj_close: pd.DataFrame = pd.concat([real_adj_close_test, adj_close_test, adj_close_forecast])
         adj_close.index.name = 'Date'
         adj_close: pd.DataFrame = adj_close.groupby(adj_close.index).sum()
 
@@ -78,22 +79,36 @@ def prediction(
             info: pd.DataFrame = pd.DataFrame(columns=['Expected Returns', 'Volatility', 'Drift', 'Test Volatility', 'Test Drift'])
             info.index.name = 'Ticker'
 
-        info.loc[ticker, 'Expected Returns'] = expected_returns.mean_historical_return(adj_close_forecast)['Adj Close Forecast']
-        info.loc[ticker, 'Volatility'] = X_test[['Adj Close']].pct_change().dropna().std()['Adj Close']
-        info.loc[ticker, 'Drift'] = (1 + expected_returns.mean_historical_return(adj_close_forecast)['Adj Close Forecast']) ** (1/len(adj_close_forecast)) - 1
+        info.loc[ticker, 'Expected Returns'] = expected_returns.mean_historical_return(
+                adj_close_forecast,
+                frequency=observation_window['stepsFoward']
+            )['Adj Close Forecast']
+        
+        info.loc[ticker, 'Volatility'] = X_temp[['Adj Close']].pct_change().dropna().std()['Adj Close']
+
+        info.loc[ticker, 'Drift'] = expected_returns.mean_historical_return(
+                adj_close_forecast,
+                frequency=1
+            )['Adj Close Forecast']
+        
         info.loc[ticker, 'Test Volatility'] = X_test[['Adj Close']].pct_change().dropna().std()['Adj Close']
-        info.loc[ticker, 'Test Drift'] = (1 + expected_returns.mean_historical_return(adj_close_test)['Adj Close Test']) ** (1/len(adj_close_forecast)) - 1
+
+        info.loc[ticker, 'Test Drift'] =expected_returns.mean_historical_return(
+                adj_close_test,
+                frequency=1
+            )['Adj Close Test']
+        
         info.to_csv('./results/prediction/Expected Return.csv')
 
-        print(X_test)
-
         if graphics:
-            plt.title("Previsão do preço de Fechamento Ajustado")
+            plt.title(f"Previsão do preço de Fechamento Ajustado - {ticker}")
             plt.plot(df_test['Adj Close'][-observation_window['stepsBack']:- observation_window['stepsFoward']], label = 'StepsBack') 
             plt.plot(adj_close['Adj Close Forecast'][-observation_window['stepsFoward']:], label = 'Forecast') 
-            plt.plot(adj_close['Adj Close Test'][-2 * observation_window['stepsFoward']:- observation_window['stepsFoward']], label = 'Forecast Test') 
-            plt.plot(adj_close['Real Adj Close Test'][-2 * observation_window['stepsFoward']:- observation_window['stepsFoward']], label = 'Expected Forecast Test')
-            plt.legend(loc = 'best') 
+            plt.plot(adj_close['Adj Close Test'][:observation_window['stepsFoward']], label = 'Last Forecast Test') 
+            plt.plot(adj_close['Real Adj Close Test'][:observation_window['stepsFoward']], label = 'Expected Last Forecast Test')
+            plt.legend(loc = 'best')
+            plt.xlabel('Data')
+            plt.ylabel('Valor (R$)')
             plt.xticks(rotation=45)
             plt.savefig(f'./results/prediction/{ticker}/{label}/return.png')
             plt.close()
