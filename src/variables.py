@@ -101,7 +101,7 @@ period: Dict[str, str] = {
 
 # Dicionário definindo a janela de observação para análise/modelagem.
 observation_window: Dict[str, int] = {
-    "stepsBack": 3 * 40,
+    "stepsBack": 4 * 40,
     "stepsFoward": 40
 }
 
@@ -109,7 +109,7 @@ observation_window: Dict[str, int] = {
 SEED: int = 25
 
 # Número de tentativas para otimização com Optuna.
-n_trials_optuna: int = 1
+n_trials_optuna: int = 100
 
 # Número de épocas para treinamento do modelo.
 epochs: int = 1
