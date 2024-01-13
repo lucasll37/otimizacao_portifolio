@@ -91,6 +91,8 @@ tickers: List[str] = [
     "YDUQ3.SA"      # Yduqs Participações S.A
 ]
 
+tickers: List[str] = ["ABEV3.SA"]
+
 # Dicionário definindo os períodos de interesse para análise.
 period: Dict[str, str] = {
     # Formato: YYYY-MM-DD
@@ -106,10 +108,10 @@ observation_window: Dict[str, int] = {
 }
 
 # Semente para garantir a reprodutibilidade em processos aleatórios.
-SEED: int = 25
+seed: int = 25
 
 # Número de tentativas para otimização com Optuna.
-n_trials_optuna: int = 100
+n_trials_optuna: int = 5
 
 # Número de épocas para treinamento do modelo.
 epochs: int = 1

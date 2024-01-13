@@ -18,14 +18,14 @@ plt.rc('figure', autolayout=True)
 
 def make_portfolio(tickers: List[str], 
                    period: Dict[str, str], 
-                   SEED: int, 
+                   seed: int, 
                    risk_free_rate: float, 
                    minimum_participation: float,
                    maximum_participation: float, 
                    use_ia: bool) -> None:
 
-    random.seed(SEED)
-    np.random.seed(SEED)
+    random.seed(seed)
+    np.random.seed(seed)
 
     adjClosePrice: pd.DataFrame = yf.download(tickers, start = period['start'], end = period['end'], progress=False)["Adj Close"]
     adjClosePrice.fillna(method = 'ffill', inplace=True)
@@ -117,11 +117,11 @@ def make_portfolio(tickers: List[str],
 
 if __name__ == '__main__':
 
-    from variables import tickers, period, SEED, risk_free_rate, minimum_participation, maximum_participation
+    from variables import tickers, period, seed, risk_free_rate, minimum_participation, maximum_participation
 
     make_portfolio(tickers,
                    period,
-                   SEED,
+                   seed,
                    risk_free_rate,
                    minimum_participation,
                    maximum_participation,

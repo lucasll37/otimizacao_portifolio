@@ -29,15 +29,15 @@ def train(
         tickers: List[str],
         period: Dict[str, str],
         observation_window: Dict[str, int],
-        SEED: int,
+        seed: int,
         n_trials_optuna: int,
         epochs: int,
         graphics: bool = True,
         verbose: int = 1
 ) -> None:
 
-    random.seed(SEED)
-    np.random.seed(SEED)
+    random.seed(seed)
+    np.random.seed(seed)
     
     for ticker in tickers:
         print(f"training predictive model for the asset {ticker}...")
@@ -96,7 +96,7 @@ def train(
                 y_train_valid,
                 test_size = 0.2,
                 shuffle = True,
-                random_state = SEED
+                random_state = seed
             )
 
             X_test: List[np.ndarray] = []
@@ -207,7 +207,7 @@ if __name__ == '__main__':
     from model import create_model
     from callbacks import create_callbacks
     from optimizer import optimizer
-    from variables import tickers, period, observation_window, SEED, n_trials_optuna, epochs, verbose
+    from variables import tickers, period, observation_window, seed, n_trials_optuna, epochs, verbose
     
     train(
         create_model,
@@ -216,7 +216,7 @@ if __name__ == '__main__':
         tickers,
         period,
         observation_window,
-        SEED,
+        seed,
         n_trials_optuna,
         epochs,
         graphics=True,

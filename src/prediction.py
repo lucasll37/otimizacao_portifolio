@@ -21,13 +21,13 @@ plt.rc('figure', autolayout=True)
 def prediction(
     tickers: List[str], 
     period: dict, 
-    SEED: int, 
+    seed: int, 
     observation_window: dict, 
     graphics: bool = False
 ) -> None:
 
-    random.seed(SEED)
-    np.random.seed(SEED)
+    random.seed(seed)
+    np.random.seed(seed)
 
     for ticker in tickers:
         data: pd.DataFrame = pd.read_csv(f'./results/data/{ticker}.csv', index_col='Date', parse_dates=True)
@@ -74,6 +74,15 @@ def prediction(
 
         adj_close.to_csv(f'./results/prediction/{label}/Adj Close.csv')
 
+
+
+        #####################
+
+
+
+
+        #####################
+
         try:
             info: pd.DataFrame = pd.read_csv('./results/prediction/Expected Return.csv', index_col='Ticker')
 
@@ -117,6 +126,6 @@ def prediction(
 
 if __name__ == '__main__':
 
-    from variables import tickers, period, observation_window, SEED
+    from variables import tickers, period, observation_window, seed
 
-    prediction(tickers, period, SEED, observation_window, graphics=True)
+    prediction(tickers, period, seed, observation_window, graphics=True)

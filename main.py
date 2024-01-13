@@ -12,7 +12,7 @@ from src.monteCarlo import monteCarlo
 from src.portfolio import make_portfolio
 
 from src.variables import tickers, period, observation_window, monte_carlo_simulation, \
-                          SEED, n_trials_optuna, epochs, risk_free_rate, verbose, \
+                          seed, n_trials_optuna, epochs, risk_free_rate, verbose, \
                           minimum_participation, maximum_participation
 
 
@@ -34,7 +34,7 @@ def main():
                 tickers,
                 period,
                 observation_window,
-                SEED,
+                seed,
                 n_trials_optuna,
                 epochs,
                 graphics=True,
@@ -44,20 +44,20 @@ def main():
         if "--only-train" in sys.argv:
             return
 
-        prediction(tickers, period, SEED, observation_window, graphics=True)
+        prediction(tickers, period, seed, observation_window, graphics=True)
         
         monteCarlo(
             tickers,
             period,
             observation_window,
             monte_carlo_simulation,
-            SEED,
+            seed,
             graphics=True
         )
 
         make_portfolio(tickers,
                        period,
-                       SEED,
+                       seed,
                        risk_free_rate,
                        minimum_participation,
                        maximum_participation,
@@ -66,7 +66,7 @@ def main():
     else:
         make_portfolio(tickers,
                        period,
-                       SEED,
+                       seed,
                        risk_free_rate,
                        minimum_participation, 
                        maximum_participation,

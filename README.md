@@ -4,13 +4,23 @@ Este projeto integra aprendizado de máquina e otimização de Markowitz para co
 ## Descrição
 O projeto foca na aplicação da fronteira de eficiência de Markowitz para otimizar carteiras de investimento, visando alcançar o maior índice Sharpe possível. Utiliza-se um conjunto de assets disponíveis para compor a carteira ideal, levando em consideração os riscos históricos e os retornos esperados na janela temporal aqui definida como *stepsFoward*. Os riscos são calculados com base no desempenho histórico dos assets na janela temporal definida como *stepsBack*.
 
-O retorno esperado dos assets é estimado utilizando técnicas de inteligência artificial. Uma rede neural recorrente (RNN/LSTM) é empregada para capturar padrões comportamentais dos ativos financeiros no intervalo de tempo estipulado entre *period['start']* e *period['boundary']*. Esses dados são utilizados para treinar e validar o modelo de previsão.
+O retorno esperado dos assets é estimado utilizando técnicas de inteligência artificial. Uma rede neural recorrente (RNN/LSTM) é empregada para capturar padrões comportamentais dos ativos financeiros no intervalo de tempo estipulado entre `period['start']` e `period['boundary']`. Esses dados são utilizados para treinar e validar o modelo de previsão.
 
-A janela de tempo de *period['boundary']* a *period['end']* é utilizada para testar a performance do modelo e para a seleção do modelo mais eficaz. A abordagem integrada de aprendizado de máquina e otimização financeira quantitativa permite uma análise mais profunda e uma seleção mais precisa dos componentes da carteira de investimentos, maximizando assim o retorno ajustado ao risco.
+A janela de tempo de `period['boundary']` a `period['end']` é utilizada para testar a performance do modelo e para a seleção do modelo mais eficaz. A abordagem integrada de aprendizado de máquina e otimização financeira quantitativa permite uma análise mais profunda e uma seleção mais precisa dos componentes da carteira de investimentos, maximizando assim o retorno ajustado ao risco.
 
 ## Ambiente
 
 - [Anaconda 3](https://www.anaconda.com/download) (Python 3.11.x)
+
+## Principais Bibliotecas
+- [Keras 2.13.1](https://keras.io/)
+- [Matplotlib 3.7.1](https://matplotlib.org/)
+- [Optuna 3.5.0](https://optuna.org/)
+- [Pandas 1.5.3](https://pandas.pydata.org/)
+- [PyPortfolioOpt 1.5.5](https://pyportfolioopt.readthedocs.io/en/latest/)
+- [Scikit-learn 1.3.0](https://scikit-learn.org/stable/)
+- [TensorFlow 2.13.0](https://www.tensorflow.org/)
+- [YFinance 0.2.35](https://pypi.org/project/yfinance/)
  
 ## Instalação
 
@@ -27,7 +37,6 @@ conda activate otimizacao_portifolio
 
 ### Instalar dependências
 ```bash
-conda install pip
 pip install -r ./requirements.txt
 ```
 
@@ -70,16 +79,16 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
   }
   ```
 
-### SEED
-- `SEED`: Semente para garantir a reprodutibilidade em processos aleatórios.
+### seed
+- `seed`: Semente para garantir a reprodutibilidade em processos aleatórios.
 - Exemplo:
 
   ```python
-  SEED: int = 25
+  seed: int = 25
   ```
 
 ### n_trials_optuna
-- `n_trials_optuna`: Número de tentativas para otimização com [Optuna](https://optuna.org/).
+- `n_trials_optuna`: Número de tentativas para otimização com Optuna.
 - Exemplo:
 
   ```python
@@ -189,9 +198,15 @@ Apesar de inapropriado o uso combinado de certas *flags*, existe a seguinte orde
   ```bash
   python -u ./main.py --no-download --no-ai
   ```
+## Logs de treinamento
+Os logs de treinamento são armazenados em `./results/logs/`. Para visualizá-los, execute o seguinte comando:
+
+```bash
+tensorboard --logdir ./results/logs/
+```
 
 ## Backtest
-O backtest é executado separadamente do projeto. O seu correto funcionamento depende da escolha adequada de datas no arquivo de variáveis `./src/variables.py` (*period*). Por razões claras, *period['end']* deve ser uma data pretérita. O backtesting é feito no periodo que sucede *observation_window['stepsFoward']* dias a data *period['end']*. **Certifique-se de que os dados desse período estejam disponíveis!**
+O backtest é executado separadamente do projeto. O seu correto funcionamento depende da escolha adequada de datas no arquivo de variáveis `./src/variables.py` (*period*). Por razões claras, `period['end']` deve ser uma data pretérita. O backtesting é feito no periodo que sucede `observation_window['stepsFoward']` dias a data `period['end']`. **Certifique-se de que os dados desse período estejam disponíveis!**
 
 Por fim, uma vez tendo executado o projeto (existência do diretório `./results`), execute o seguinte comando:
 
@@ -231,6 +246,8 @@ otimizacao_portifolio/
 │   ├── train.py
 │   └── variables.py
 │
+├── .editorconfig
+│
 ├── .gitignore
 │
 ├── LICENSE
@@ -261,7 +278,7 @@ otimizacao_portifolio/
 
   - `__pycache__/`: Contém arquivos de bytecode compilados que são criados pelo Python para acelerar a inicialização do programa.
   - `__init__.py`: Arquivo necessário para tratar o diretório como um módulo Python, possibilitando a importação de arquivos dentro deste diretório.
-  - `backtest.py`: Realiza backtesting no portfolio para o período de projeção (*observation_window['stepsFoward']*).
+  - `backtest.py`: Realiza backtesting no portfolio para o período de projeção (`observation_window['stepsFoward']`).
   - `callbacks.py`: Define funções de callback que podem ser usadas durante o treinamento de modelos para, por exemplo, salvar checkpoints, ajustar parâmetros ou monitorar o desempenho.
   - `model.py`: Inclui a definição e a configuração do modelo de machine learning utilizado no projeto.
   - `monteCarlo.py`: Implementa simulações de Monte Carlo, que podem ser usadas para projeções financeiras, análise de risco, etc.
@@ -272,6 +289,7 @@ otimizacao_portifolio/
   - `train.py`: Script para treinar o modelo de machine learning, incluindo a definição de parâmetros, escolha de algoritmos e avaliação de desempenho.
   - `variables.py`: Arquivo para definir variáveis globais, constantes e configurações usadas em todo o projeto, como parâmetros de modelos, caminhos de arquivos, configurações de ambiente, etc.
 
+- `.editorconfig`: Define estilos de codificação para facilitar a colaboração entre diferentes desenvolvedores e IDEs.
 - `.gitignore`: Define quais arquivos e diretórios devem ser ignorados pelo sistema de controle de versão Git.
 - `LICENSE`: Contém a licença de uso e distribuição do projeto.
 - `main.py`: O script principal para executar o projeto.
@@ -279,7 +297,7 @@ otimizacao_portifolio/
 - `requirements.txt`: Lista todas as bibliotecas necessárias para executar o projeto.
 
 ## Observações
-- O diretório `./result` e suas subpastas são criadas automaticamente ao executar o projeto e podem ser movidas (recortada, renomeada ou excluída) sem comprometer o correto funcionamento do projeto.
+- O diretório `./result` e suas subpastas são criadas automaticamente ao executar o projeto e pode ser movido ou excluído sem comprometer o correto funcionamento do projeto.
 
 - A cada execução, caso já exista o diretório `./results`, é feito a sobreposição dos arquivos com nome comum. Raciocine com esse comportamente para manter o resultado das otimizações de mesmo escopo agrupados.
 

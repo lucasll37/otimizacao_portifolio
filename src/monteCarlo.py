@@ -13,10 +13,10 @@ plt.style.use('ggplot')
 plt.rcParams['figure.figsize'] = [10, 5]
 plt.rc('figure', autolayout=True)
 
-def monteCarlo(tickers, period, observation_window, monte_carlo_simulation, SEED, graphics=True):
+def monteCarlo(tickers, period, observation_window, monte_carlo_simulation, seed, graphics=True):
 
-    random.seed(SEED)
-    np.random.seed(SEED)
+    random.seed(seed)
+    np.random.seed(seed)
 
     for ticker in tickers:
         data: pd.DataFrame = pd.read_csv(f'./results/data/{ticker}.csv', index_col='Date', parse_dates=True)
@@ -145,14 +145,14 @@ def monteCarlo(tickers, period, observation_window, monte_carlo_simulation, SEED
 
 if __name__ == '__main__':
 
-    from variables import tickers, period, observation_window, monte_carlo_simulation, SEED
+    from variables import tickers, period, observation_window, monte_carlo_simulation, seed
 
     monteCarlo(
         tickers,
         period,
         observation_window,
         monte_carlo_simulation,
-        SEED,
+        seed,
         graphics=True
     )
     
