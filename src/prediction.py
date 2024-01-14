@@ -10,7 +10,7 @@ import keras
 import random
 from joblib import load
 from pandas.tseries.offsets import BDay
-from pypfopt import expected_returns
+from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import MinMaxScaler
 
 plt.style.use('ggplot')
@@ -74,14 +74,22 @@ def prediction(
 
         adj_close.to_csv(f'./results/prediction/{label}/Adj Close.csv')
 
+        X = np.arange(observation_window['stepsFoward']).reshape(-1, 1)
 
+        model_test = LinearRegression()
+        model_forecast = LinearRegression()
 
-        #####################
+        model_test.fit(X, adj_close_test.values)
+        model_forecast.fit(X, adj_close_forecast.values)
 
+        y_pred_test = model_test.predict(X)
+        y_pred_forecast = model_forecast.predict(X)
 
+        slope_test = model_test.coef_[0][0]
+        slope_forecast = model_forecast.coef_[0][0]
 
-
-        #####################
+        drift_test = (1 + (slope_test * (observation_window['stepsFoward'] - 1))/y_pred_test[0][0]) ** (1/(observation_window['stepsFoward'] - 1)) - 1
+        drift_forecast = (1 + (slope_forecast * (observation_window['stepsFoward'] - 1))/y_pred_forecast[0][0]) ** (1/(observation_window['stepsFoward'] - 1)) - 1
 
         try:
             info: pd.DataFrame = pd.read_csv('./results/prediction/Expected Return.csv', index_col='Ticker')
@@ -90,25 +98,31 @@ def prediction(
             info: pd.DataFrame = pd.DataFrame(columns=['Expected Returns', 'Volatility', 'Drift', 'Test Volatility', 'Test Drift'])
             info.index.name = 'Ticker'
 
-        info.loc[ticker, 'Expected Returns'] = expected_returns.mean_historical_return(
-                adj_close_forecast,
-                frequency=observation_window['stepsFoward']
-            )['Adj Close Forecast']
-        
+        # info.loc[ticker, 'Expected Returns'] = expected_returns.mean_historical_return(
+        #         adj_close_forecast,
+        #         frequency=observation_window['stepsFoward']-1
+        #     )['Adj Close Forecast']
+
+        info.loc[ticker, 'Expected Returns'] = (y_pred_forecast[-1][0]/y_pred_forecast[0][0]) - 1
+
         info.loc[ticker, 'Volatility'] = X_temp[['Adj Close']].pct_change().dropna().std()['Adj Close']
 
-        info.loc[ticker, 'Drift'] = expected_returns.mean_historical_return(
-                adj_close_forecast,
-                frequency=1
-            )['Adj Close Forecast']
-        
+        # info.loc[ticker, 'Drift'] = expected_returns.mean_historical_return(
+        #         adj_close_forecast,
+        #         frequency=1
+        #     )['Adj Close Forecast']
+
+        info.loc[ticker, 'Drift'] = drift_forecast
+
         info.loc[ticker, 'Test Volatility'] = X_test[['Adj Close']].pct_change().dropna().std()['Adj Close']
 
-        info.loc[ticker, 'Test Drift'] =expected_returns.mean_historical_return(
-                adj_close_test,
-                frequency=1
-            )['Adj Close Test']
-        
+        # info.loc[ticker, 'Test Drift'] =expected_returns.mean_historical_return(
+        #         adj_close_test,
+        #         frequency=1
+        #     )['Adj Close Test']
+
+        info.loc[ticker, 'Test Drift'] = drift_test
+
         info.to_csv('./results/prediction/Expected Return.csv')
 
         if graphics:
@@ -117,6 +131,8 @@ def prediction(
             plt.plot(adj_close['Adj Close Forecast'][-observation_window['stepsFoward']:], label = 'Forecast') 
             plt.plot(adj_close['Adj Close Test'][:observation_window['stepsFoward']], label = 'Last Forecast Test') 
             plt.plot(adj_close['Real Adj Close Test'][:observation_window['stepsFoward']], label = 'Expected Last Forecast Test')
+            plt.plot(adj_close_test.index, y_pred_test, label = f'Drift Test: {drift_test:.5f}', color='gray', linestyle='--') 
+            plt.plot(adj_close_forecast.index, y_pred_forecast, label = f'Drift Forecast: {drift_forecast:.5f}', color='gray', linestyle='--') 
             plt.legend(loc = 'best')
             plt.xlabel('Data')
             plt.ylabel('Valor (R$)')

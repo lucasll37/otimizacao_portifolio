@@ -48,7 +48,6 @@ def main():
         
         monteCarlo(
             tickers,
-            period,
             observation_window,
             monte_carlo_simulation,
             seed,

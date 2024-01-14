@@ -154,7 +154,7 @@ def train(
                 epochs=epochs,
                 batch_size=study.best_params['batch_size'],
                 validation_data = (X_valid, y_valid),
-                callbacks = create_callbacks(ticker, label, False, verbose)
+                callbacks = create_callbacks(label, False, verbose)
             )
 
             model.save(f'./results/trained models/{label}/model.h5')

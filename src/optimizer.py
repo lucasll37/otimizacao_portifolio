@@ -45,7 +45,7 @@ def optimizer(
         epochs=epochs,
         batch_size=batch_size,
         validation_data=(X_valid, y_valid),
-        callbacks=create_callbacks(ticker, label, True, verbose)
+        callbacks=create_callbacks(label, True, verbose)
     )
     
     return min(history.history['val_loss'])

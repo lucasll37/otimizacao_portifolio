@@ -13,7 +13,7 @@ plt.style.use('ggplot')
 plt.rcParams['figure.figsize'] = [10, 5]
 plt.rc('figure', autolayout=True)
 
-def monteCarlo(tickers, period, observation_window, monte_carlo_simulation, seed, graphics=True):
+def monteCarlo(tickers, observation_window, monte_carlo_simulation, seed, graphics=True):
 
     random.seed(seed)
     np.random.seed(seed)
@@ -145,11 +145,10 @@ def monteCarlo(tickers, period, observation_window, monte_carlo_simulation, seed
 
 if __name__ == '__main__':
 
-    from variables import tickers, period, observation_window, monte_carlo_simulation, seed
+    from variables import tickers, observation_window, monte_carlo_simulation, seed
 
     monteCarlo(
         tickers,
-        period,
         observation_window,
         monte_carlo_simulation,
         seed,

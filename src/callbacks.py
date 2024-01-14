@@ -5,7 +5,7 @@ from keras.callbacks import Callback, EarlyStopping, ReduceLROnPlateau, Terminat
 from typing import List
 
 
-def create_callbacks(ticker: str, label: str, optim: bool = False, verbose: int = 1) -> List[Callback]:
+def create_callbacks(label: str, optim: bool = False, verbose: int = 1) -> List[Callback]:
 
     
     earlystop: Callback = EarlyStopping(monitor='val_loss',
