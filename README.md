@@ -13,15 +13,24 @@ A janela de tempo de `period['boundary']` a `period['end']` é utilizada para te
 - [Anaconda 3](https://www.anaconda.com/download) (Python 3.11.x)
 
 ## Principais Bibliotecas
+- [Flake 7.0.0](https://flake8.pycqa.org/en/latest/index.html)
 - [Keras 2.13.1](https://keras.io/)
 - [Matplotlib 3.7.1](https://matplotlib.org/)
 - [Optuna 3.5.0](https://optuna.org/)
+- [Optuna-dashboard 0.14.0](https://optuna.org/)
 - [Pandas 1.5.3](https://pandas.pydata.org/)
 - [PyPortfolioOpt 1.5.5](https://pyportfolioopt.readthedocs.io/en/latest/)
 - [Scikit-learn 1.3.0](https://scikit-learn.org/stable/)
 - [TensorFlow 2.13.0](https://www.tensorflow.org/)
 - [YFinance 0.2.35](https://pypi.org/project/yfinance/)
- 
+
+## (OPCIONAL) Extensões sugeridas do VS Code
+- EditorConfig for VS Code
+- Git Graph
+- Material Icon Theme
+- Optuna Dashboard for VS Code
+- Rainbow CSV
+
 ## Instalação
 
 ### Criação do ambiente virtual
@@ -54,7 +63,13 @@ O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas par
 - Exemplo:
 
   ```python
-  tickers: List[str] = ["EMBR3.SA", "BRPR3.SA", ...]
+    tickers: List[str] = [
+        "ABEV3.SA",     # Ambev S.A
+        "ALPA4.SA",     # Alpargatas S.A
+        "ARZZ3.SA",     # Arezzo Indústria e Comércio S.A
+        "ASAI3.SA",     # Assaí Atacadista S.A
+        # ...
+    ]
     ```
 
 ### period
@@ -198,7 +213,15 @@ Apesar de inapropriado o uso combinado de certas *flags*, existe a seguinte orde
   ```bash
   python -u ./main.py --no-download --no-ai
   ```
-## Logs de treinamento
+
+## Logs da otimização de hiperparâmetros
+Para visualizá-los, execute o seguinte comando:
+
+```bash
+optuna-dashboard sqlite:///./sqlite/study.db
+```
+
+## Logs do treinamento
 Os logs de treinamento são armazenados em `./results/logs/`. Para visualizá-los, execute o seguinte comando:
 
 ```bash
@@ -230,7 +253,7 @@ otimizacao_portifolio/
 │   └── trained models/
 │
 ├── sqlite/
-│   ├── *asset*/
+│   ├── study.db
 │
 ├── src/
 │   ├── __pycache__
@@ -256,7 +279,9 @@ otimizacao_portifolio/
 │
 ├── README.md
 │
-└── requirements.txt
+├── requirements.txt
+│
+└── setup.cfg
 ```
 
 ### Descrição dos Diretórios e Arquivos:
@@ -273,7 +298,10 @@ otimizacao_portifolio/
     - `serialized objects/`: Objetos de transformação dos dados (serializados).
     - `trained models/`: Modelos de machine learning treinados e salvos.
 
-- `sqlite/`: Diretório para o banco de dados SQLite, organizado por ativos.
+- `sqlite/`: Diretório para o banco de dados SQLite.
+
+  - `study.db`: Banco de dados SQLite para armazenar os históricos da otimização de hiperparâmetros.
+
 - `src/`: Diretório que contém o código fonte do projeto, incluindo scripts para diferentes funcionalidades, como callbacks, modelagem, simulação de Monte Carlo, obtenção de dados, gerenciamento de portfólio, previsão e treinamento, além de variáveis de configuração.
 
   - `__pycache__/`: Contém arquivos de bytecode compilados que são criados pelo Python para acelerar a inicialização do programa.
@@ -295,6 +323,7 @@ otimizacao_portifolio/
 - `main.py`: O script principal para executar o projeto.
 - `README.md`: Fornece uma visão geral do projeto, instruções de instalação e outras informações importantes.
 - `requirements.txt`: Lista todas as bibliotecas necessárias para executar o projeto.
+- `setup.cfg`: Arquivo de configuração do Flake8, que é uma ferramenta de linting para Python.
 
 ## Observações
 - O diretório `./result` e suas subpastas são criadas automaticamente ao executar o projeto e pode ser movido ou excluído sem comprometer o correto funcionamento do projeto.

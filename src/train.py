@@ -110,12 +110,12 @@ def train(
             y_test: np.ndarray = np.array(y_test)
             X_test: np.ndarray = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
 
-            if not os.path.exists(f'./sqlite/{label}'):
-                os.makedirs(f'./sqlite/{label}')
+            if not os.path.exists('./sqlite/optuna'):
+                os.makedirs(f'./sqlite/optuna')
 
             study: optuna.study.Study = optuna.create_study(
-                study_name=label,
-                storage=f"sqlite:///./sqlite/{label}/study.db",
+                study_name='portfolio optimization',
+                storage=f"sqlite:///./sqlite/optuna/study.db",
                 load_if_exists=True,
                 direction='minimize'
             )
