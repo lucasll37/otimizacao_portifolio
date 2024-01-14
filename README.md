@@ -218,7 +218,7 @@ Apesar de inapropriado o uso combinado de certas *flags*, existe a seguinte orde
 Para visualizá-los, execute o seguinte comando:
 
 ```bash
-optuna-dashboard sqlite:///./sqlite/study.db
+optuna-dashboard sqlite:///./sqlite/optuna/study.db
 ```
 
 ## Logs do treinamento
