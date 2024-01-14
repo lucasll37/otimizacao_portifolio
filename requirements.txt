@@ -1,4 +1,4 @@
-flake==7.0.0
+flake8==7.0.0
 keras==2.13.1
 matplotlib==3.7.1
 optuna==3.5.0
