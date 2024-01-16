@@ -56,7 +56,7 @@ conda deactivate
 
 ## Configuração de Variáveis
 
-O arquivo `./src/variables.py` contém as variáveis que devem ser ajustadas para personalizar a análise. Abaixo estão as instruções para modificar cada variável:
+O arquivo [`./src/variables.py`](./src/variables.py) contém as variáveis que devem ser ajustadas para personalizar a análise. Abaixo estão as instruções para modificar cada variável:
 
 ### tickers
 - `tickers`: Lista de tickers para os quais as análises serão feitas. Siga convenção do Yahoo Finance disponível [aqui](https://finance.yahoo.com/).
@@ -229,7 +229,7 @@ tensorboard --logdir ./results/logs/
 ```
 
 ## Backtest
-O backtest é executado separadamente do projeto. O seu correto funcionamento depende da escolha adequada de datas no arquivo de variáveis `./src/variables.py` (*period*). Por razões claras, `period['end']` deve ser uma data pretérita. O backtesting é feito no periodo que sucede `observation_window['stepsFoward']` dias a data `period['end']`. **Certifique-se de que os dados desse período estejam disponíveis!**
+O backtest é executado separadamente do projeto. O seu correto funcionamento depende da escolha adequada de datas no arquivo de variáveis [`./src/variables.py`](./src/variables.py) (*period*). Por razões claras, `period['end']` deve ser uma data pretérita. O backtesting é feito no periodo que sucede `observation_window['stepsFoward']` dias a data `period['end']`. **Certifique-se de que os dados desse período estejam disponíveis!**
 
 Por fim, uma vez tendo executado o projeto (existência do diretório `./results`), execute o seguinte comando:
 
@@ -253,7 +253,8 @@ otimizacao_portifolio/
 │   └── trained models/
 │
 ├── sqlite/
-│   ├── study.db
+│   └── uptuna
+│       └── study.py
 │
 ├── src/
 │   ├── __pycache__
@@ -300,30 +301,32 @@ otimizacao_portifolio/
 
 - `sqlite/`: Diretório para o banco de dados SQLite.
 
-  - `study.db`: Banco de dados SQLite para armazenar os históricos da otimização de hiperparâmetros.
+    - `Optuna/`: Banco de dados SQLite para armazenar os resultados da otimização de hiperparâmetros.
+
+        - `study.db`: Banco de dados SQLite para armazenar os históricos da otimização de hiperparâmetros.
 
 - `src/`: Diretório que contém o código fonte do projeto, incluindo scripts para diferentes funcionalidades, como callbacks, modelagem, simulação de Monte Carlo, obtenção de dados, gerenciamento de portfólio, previsão e treinamento, além de variáveis de configuração.
 
   - `__pycache__/`: Contém arquivos de bytecode compilados que são criados pelo Python para acelerar a inicialização do programa.
   - `__init__.py`: Arquivo necessário para tratar o diretório como um módulo Python, possibilitando a importação de arquivos dentro deste diretório.
-  - `backtest.py`: Realiza backtesting no portfolio para o período de projeção (`observation_window['stepsFoward']`).
-  - `callbacks.py`: Define funções de callback que podem ser usadas durante o treinamento de modelos para, por exemplo, salvar checkpoints, ajustar parâmetros ou monitorar o desempenho.
-  - `model.py`: Inclui a definição e a configuração do modelo de machine learning utilizado no projeto.
-  - `monteCarlo.py`: Implementa simulações de Monte Carlo, que podem ser usadas para projeções financeiras, análise de risco, etc.
-  - `data.py`: Responsável pela aquisição, limpeza e pré-processamento de dados.
-  - `optimizer.py`: Responsável pela otimização dos hiperpâmetros do modelo.
-  - `portfolio.py`: Contém lógicas relacionadas à gestão e análise de portfólios de investimentos.
-  - `prediction.py`: Funções e scripts dedicados à realização de previsões com base no modelo treinado.
-  - `train.py`: Script para treinar o modelo de machine learning, incluindo a definição de parâmetros, escolha de algoritmos e avaliação de desempenho.
-  - `variables.py`: Arquivo para definir variáveis globais, constantes e configurações usadas em todo o projeto, como parâmetros de modelos, caminhos de arquivos, configurações de ambiente, etc.
+  - [`backtest.py`](./src/backtest.py): Realiza backtesting no portfolio para o período de projeção (`observation_window['stepsFoward']`).
+  - [`callbacks.py`](./src/callbacks.py): Define funções de callback que podem ser usadas durante o treinamento de modelos para, por exemplo, salvar checkpoints, ajustar parâmetros ou monitorar o desempenho.
+  - [`model.py`](./src/model.py): Inclui a definição e a configuração do modelo de machine learning utilizado no projeto.
+  - [`monteCarlo.py`](./src/monteCarlo.py): Implementa simulações de Monte Carlo, que podem ser usadas para projeções financeiras, análise de risco, etc.
+  - [`data.py`](./src/data.py): Responsável pela aquisição, limpeza e pré-processamento de dados.
+  - [`optimizer.py`](./src/optimizer.py): Responsável pela otimização dos hiperpâmetros do modelo.
+  - [`portfolio.py`](./src/portfolio.py): Contém lógicas relacionadas à gestão e análise de portfólios de investimentos.
+  - [`prediction.py`](./src/prediction.py): Funções e scripts dedicados à realização de previsões com base no modelo treinado.
+  - [`train.py`](./src/train.py): Script para treinar o modelo de machine learning, incluindo a definição de parâmetros, escolha de algoritmos e avaliação de desempenho.
+  - [`variables.py`](./src/variables.py): Arquivo para definir variáveis globais, constantes e configurações usadas em todo o projeto, como parâmetros de modelos, caminhos de arquivos, configurações de ambiente, etc.
 
-- `.editorconfig`: Define estilos de codificação para facilitar a colaboração entre diferentes desenvolvedores e IDEs.
-- `.gitignore`: Define quais arquivos e diretórios devem ser ignorados pelo sistema de controle de versão Git.
-- `LICENSE`: Contém a licença de uso e distribuição do projeto.
-- `main.py`: O script principal para executar o projeto.
+- [`.editorconfig`](.editorconfig): Define estilos de codificação para facilitar a colaboração entre diferentes desenvolvedores e IDEs.
+- [`.gitignore`](.gitignore): Define quais arquivos e diretórios devem ser ignorados pelo sistema de controle de versão Git.
+- [`LICENSE.md`](LICENSE.md): Contém a licença de uso e distribuição do projeto.
+- [`main.py`](main.py): O script principal para executar o projeto.
 - `README.md`: Fornece uma visão geral do projeto, instruções de instalação e outras informações importantes.
-- `requirements.txt`: Lista todas as bibliotecas necessárias para executar o projeto.
-- `setup.cfg`: Arquivo de configuração do Flake8, que é uma ferramenta de linting para Python.
+- [`requirements.txt`](requirements.txt): Lista todas as bibliotecas necessárias para executar o projeto.
+- [`setup.cfg`](setup.cfg): Arquivo de configuração do Flake8, que é uma ferramenta de linting para Python.
 
 ## Observações
 - O diretório `./result` e suas subpastas são criadas automaticamente ao executar o projeto e pode ser movido ou excluído sem comprometer o correto funcionamento do projeto.
@@ -332,7 +335,7 @@ otimizacao_portifolio/
 
 - Caso decida alterar o espaço de buscas da otimização dos hiperparâmetros em `./src/optimizer.py`, remova manualmente o diretório `./sqlite/`.
 
-- A configuração de callbacks do treinamento do modelo pode ser alterada em `./src/callbacks.py`.
+- A configuração de callbacks do treinamento do modelo pode ser alterada em [`./src/callbacks.py`](./src/callbacks.py).
 
 ## Autoria
 - [Lucas Lima](https://www.linkedin.com/in/lucaslima25)

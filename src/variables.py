@@ -113,7 +113,7 @@ observation_window: Dict[str, int] = {
 seed: int = 25
 
 # Número de tentativas para otimização com Optuna.
-n_trials_optuna: int = 0 # 432
+n_trials_optuna: int = 432 # 432
 
 # Número de épocas para treinamento do modelo.
 epochs: int = 1000
