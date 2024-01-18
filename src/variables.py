@@ -98,7 +98,7 @@ tickers: List[str] = [
 # Dicionário definindo os períodos de interesse para análise.
 period: Dict[str, str] = {
     # Formato: YYYY-MM-DD
-    "start": "2014-01-08",
+    "start": "2017-01-08",
     "boundary": "2021-01-06",
     "end": "2023-02-04"
 }
@@ -132,4 +132,4 @@ risk_free_rate: float = 0.1168 # Atualizado Dia 11/01/2024
 minimum_participation: float = 0.02 # 2%
 
 # Máximo de participação de um ativo na carteira.
-maximum_participation: float = 0.12 # 15%
+maximum_participation: float = 0.10 # 10%
