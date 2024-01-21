@@ -11,7 +11,6 @@ import yfinance as yf
 import matplotlib.dates as mdates
 from pandas.tseries.offsets import BDay
 from pypfopt import expected_returns, risk_models
-from typing import Dict, List, Tuple
 
 
 plt.style.use('ggplot')

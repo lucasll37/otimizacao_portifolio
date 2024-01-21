@@ -11,6 +11,7 @@ A janela de tempo de `period['boundary']` a `period['end']` é utilizada para te
 ## Ambiente
 
 - [Anaconda 3](https://www.anaconda.com/download) (Python 3.11.x)
+- GPU habilitada para o uso de bibliotecas de deep learning (opcional)
 
 ## Principais Bibliotecas
 - [Flake 7.0.0](https://flake8.pycqa.org/en/latest/index.html)
@@ -103,7 +104,7 @@ O arquivo [`./src/variables.py`](./src/variables.py) contém as variáveis que d
   ```
 
 ### n_trials_optuna
-- `n_trials_optuna`: Número de tentativas para otimização com Optuna.
+- `n_trials_optuna`: Número de tentativas para otimização de hiperparâmetros com o Optuna. Quando ajustado para 0, o treinamento é feito com base nos melhores hiperparâmetros encontrados em execuções anteriores (armazenados no registro do Optuna). Caso ainda não exista registro, o treinamento é feita com base em hiperparâmetros aleatórios obtidos no espaço de busca do otimizador.
 - Exemplo:
 
   ```python
@@ -329,13 +330,16 @@ otimizacao_portifolio/
 - [`setup.cfg`](setup.cfg): Arquivo de configuração do Flake8, que é uma ferramenta de linting para Python.
 
 ## Observações
-- O diretório `./result` e suas subpastas são criadas automaticamente ao executar o projeto e pode ser movido ou excluído sem comprometer o correto funcionamento do projeto.
+- O diretório [`./results`](./results/) e suas subpastas são criadas automaticamente ao executar o projeto e pode ser movido ou excluído sem comprometer o correto funcionamento do projeto.
 
-- A cada execução, caso já exista o diretório `./results`, é feito a sobreposição dos arquivos com nome comum. Raciocine com esse comportamente para manter o resultado das otimizações de mesmo escopo agrupados.
+- A cada execução, caso já exista o diretório [`./results`](./results/), é feito a sobreposição dos arquivos com nome comum. Raciocine com esse comportamente para manter o resultado das otimizações de mesmo escopo agrupados.
 
-- Caso decida alterar o espaço de buscas da otimização dos hiperparâmetros em `./src/optimizer.py`, remova manualmente o diretório `./sqlite/`.
+- Caso decida alterar o espaço de buscas da otimização dos hiperparâmetros em [`./src/optimizer.py`](./src/optimizer.py), remova manualmente o diretório [`./sqlite/`](./sqlite/).
 
 - A configuração de callbacks do treinamento do modelo pode ser alterada em [`./src/callbacks.py`](./src/callbacks.py).
+
+- O uso de GPU torna o processo de otimização, treinamento e inferência aproximadamente 10x mais rápido.
+
 
 ## Autoria
 - [Lucas Lima](https://www.linkedin.com/in/lucaslima25)
