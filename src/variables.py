@@ -99,21 +99,21 @@ tickers: List[str] = [
 period: Dict[str, str] = {
     # Formato: YYYY-MM-DD
     "start": "2017-01-08",
-    "boundary": "2021-01-06",
-    "end": "2023-02-04"
+    "boundary": "2023-01-02",
+    "end": "2023-07-03"
 }
 
 # Dicionário definindo a janela de observação para análise/modelagem.
 observation_window: Dict[str, int] = {
-    "stepsBack": 4 * 60,
-    "stepsFoward": 60
+    "stepsBack": 90,
+    "stepsFoward": 15
 }
 
 # Semente para garantir a reprodutibilidade em processos aleatórios.
 seed: int = 25
 
 # Número de tentativas para otimização com Optuna.
-n_trials_optuna: int = 432 # 432
+n_trials_optuna: int = 0 # 432
 
 # Número de épocas para treinamento do modelo.
 epochs: int = 1000
